@@ -1,0 +1,71 @@
+PATH
+  remote: .
+  specs:
+    devise-passkeys (0.1.0)
+      webauthn
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    android_key_attestation (0.3.0)
+    ast (2.4.2)
+    awrence (1.2.1)
+    bindata (2.4.12)
+    cbor (0.5.9.6)
+    cose (1.2.1)
+      cbor (~> 0.5.9)
+      openssl-signature_algorithm (~> 1.0)
+    json (2.6.2)
+    jwt (2.5.0)
+    minitest (5.16.3)
+    openssl (3.0.1)
+    openssl-signature_algorithm (1.2.1)
+      openssl (> 2.0, < 3.1)
+    parallel (1.22.1)
+    parser (3.1.2.1)
+      ast (~> 2.4.1)
+    rainbow (3.1.1)
+    rake (13.0.6)
+    regexp_parser (2.6.0)
+    rexml (3.2.5)
+    rubocop (1.36.0)
+      json (~> 2.3)
+      parallel (~> 1.10)
+      parser (>= 3.1.2.1)
+      rainbow (>= 2.2.2, < 4.0)
+      regexp_parser (>= 1.8, < 3.0)
+      rexml (>= 3.2.5, < 4.0)
+      rubocop-ast (>= 1.20.1, < 2.0)
+      ruby-progressbar (~> 1.7)
+      unicode-display_width (>= 1.4.0, < 3.0)
+    rubocop-ast (1.21.0)
+      parser (>= 3.1.1.0)
+    ruby-progressbar (1.11.0)
+    safety_net_attestation (0.4.0)
+      jwt (~> 2.0)
+    tpm-key_attestation (0.11.0)
+      bindata (~> 2.4)
+      openssl (> 2.0, < 3.1)
+      openssl-signature_algorithm (~> 1.0)
+    unicode-display_width (2.3.0)
+    webauthn (2.5.2)
+      android_key_attestation (~> 0.3.0)
+      awrence (~> 1.1)
+      bindata (~> 2.4)
+      cbor (~> 0.5.9)
+      cose (~> 1.1)
+      openssl (>= 2.2, < 3.1)
+      safety_net_attestation (~> 0.4.0)
+      tpm-key_attestation (~> 0.11.0)
+
+PLATFORMS
+  arm64-darwin-21
+
+DEPENDENCIES
+  devise-passkeys!
+  minitest (~> 5.0)
+  rake (~> 13.0)
+  rubocop (~> 1.21)
+
+BUNDLED WITH
+   2.3.7
