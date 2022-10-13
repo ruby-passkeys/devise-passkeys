@@ -1,28 +1,8 @@
 # Devise::Passkeys
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/devise/passkeys`. To experiment with that code, run `bin/console` for an interactive prompt.
+This Devise extension allows you to use passkeys instead of passwords for user authentication.
 
-TODO: Delete this and the text above, and describe your gem
 
-## Installation
-
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'devise-passkeys'
-```
-
-And then execute:
-
-    $ bundle install
-
-Or install it yourself as:
-
-    $ gem install devise-passkeys
-
-## Usage
-
-TODO: Write usage instructions here
 
 ## Development
 
@@ -41,3 +21,8 @@ The gem is available as open source under the terms of the [MIT License](https:/
 ## Code of Conduct
 
 Everyone interacting in the Devise::Passkeys project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/devise-passkeys/blob/main/CODE_OF_CONDUCT.md).
+
+
+## Acknowledgements
+
+This work is based on [Petr Hlavicka](https://github.com/CiTroNaK)'s [webauthn-with-devise](https://github.com/CiTroNaK/webauthn-with-devise/compare/main...3-passwordless).
