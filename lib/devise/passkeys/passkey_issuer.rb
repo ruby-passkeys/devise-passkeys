@@ -1,16 +1,9 @@
 module Devise
   module Passkeys
     class PasskeyIssuer
-      MAXIMUM_PASSKEYS_PER_USER = 20
-
       def self.build
-        new(maximum_passkeys_per_user: MAXIMUM_PASSKEYS_PER_USER)
+        new
       end
-
-      def initialize(maximum_passkeys_per_user:)
-        self.maximum_passkeys_per_user = maximum_passkeys_per_user
-      end
-
 
       def create_and_return_passkey(resource:, label:, webauthn_credential:, extra_attributes: {})
         passkey_class = passkey_class(resource)
