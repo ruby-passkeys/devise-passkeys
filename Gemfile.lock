@@ -26,6 +26,10 @@ GEM
       minitest (>= 5.1)
       tzinfo (~> 2.0)
     android_key_attestation (0.3.0)
+    appraisal (2.4.1)
+      bundler
+      rake
+      thor (>= 0.14.0)
     ast (2.4.2)
     awrence (1.2.1)
     bindata (2.4.15)
@@ -99,6 +103,7 @@ GEM
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.12.3)
     simplecov_json_formatter (0.1.4)
+    thor (1.2.1)
     tpm-key_attestation (0.11.0)
       bindata (~> 2.4)
       openssl (> 2.0, < 3.1)
@@ -122,6 +127,7 @@ PLATFORMS
   arm64-darwin-21
 
 DEPENDENCIES
+  appraisal
   database_cleaner-active_record
   database_cleaner-mongoid
   debug
