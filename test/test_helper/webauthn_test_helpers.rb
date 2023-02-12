@@ -24,6 +24,10 @@ module WebAuthnTestHelpers
     client.get(challenge: challenge, user_verified: user_verified)
   end
 
+  def create_raw_credential(credential_hash:, relying_party:)
+    WebAuthn::Credential.from_create(credential_hash, relying_party: relying_party)
+  end
+
   def assertion_response(assertion:)
     WebAuthn::AuthenticatorAssertionResponse.new(
       client_data_json: assertion["response"]["clientDataJSON"],
