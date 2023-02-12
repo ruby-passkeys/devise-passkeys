@@ -25,7 +25,7 @@ module Devise
           @resource_class = resource_class
         end
 
-        def find_with_credential_id(resource_class:, encoded_credential_id:)
+        def find_with_credential_id(encoded_credential_id)
           resource_class.passkeys_class.where(external_id: encoded_credential_id).first
         end
       end
