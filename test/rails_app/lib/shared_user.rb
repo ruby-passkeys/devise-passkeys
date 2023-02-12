@@ -11,6 +11,10 @@ module SharedUser
 
     attr_accessor :other_key
 
+    def self.passkeys_class
+      UserPasskey
+    end
+
   end
 
   def raw_confirmation_token
