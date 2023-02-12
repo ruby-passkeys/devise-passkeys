@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'devise'
 require_relative "passkeys/version"
 
 module Devise
