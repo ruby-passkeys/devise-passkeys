@@ -47,4 +47,15 @@ ActiveRecord::Schema.define(version: 20100401102949) do
     t.datetime "updated_at"
   end
 
+  create_table "passkeys", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "label"
+    t.string "external_id"
+    t.string "public_key"
+    t.integer "sign_count", default: 0, null: false
+    t.datetime "last_used_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
 end

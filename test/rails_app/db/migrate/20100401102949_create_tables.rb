@@ -58,6 +58,19 @@ class CreateTables < superclass
 
       t.timestamps null: false
     end
+
+    create_table :user_passkeys do |t|
+      t.integer :user_id, null: false
+      t.string :label, null: false
+
+      t.string :external_id, null: false
+      t.string :public_key, null: false
+      t.integer :sign_count, default: 0, null: false
+
+      t.datetime :last_used_at
+
+      t.timestamps null: false
+    end
   end
 
   def self.down

@@ -2,11 +2,9 @@
 
 require 'shared_user'
 
-class User < ActiveRecord::Base
-  include Shim
-  include SharedUser
+class UserPasskey < ActiveRecord::Base
 
-  has_many :passkeys, class_name: "UserPasskey"
+  belongs_to :user, inverse_of: :passkeys
 
   validates :sign_in_count, presence: true
 
