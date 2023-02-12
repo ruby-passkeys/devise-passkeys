@@ -6,7 +6,7 @@ module SharedUser
   included do
     devise :confirmable, :lockable, :recoverable,
            :rememberable, :timeoutable,
-           :trackable, :validatable,
+           :trackable,
            reconfirmable: false
 
     attr_accessor :other_key
