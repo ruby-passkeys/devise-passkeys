@@ -8,3 +8,11 @@
 /tmp/
 .DS_Store
 gemfiles/*.gemfile.lock
+test/rails_app/log/*
+test/rails_app/tmp/*
+*~
+*.sqlite3
+rdoc/*
+pkg
+log
+test/tmp/*
