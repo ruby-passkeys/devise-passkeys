@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 require 'devise'
+require_relative 'passkeys/rails'
+require_relative 'passkeys/model'
+require_relative 'passkeys/passkey_issuer'
+require_relative 'passkeys/strategy'
 require_relative "passkeys/version"
 
 module Devise

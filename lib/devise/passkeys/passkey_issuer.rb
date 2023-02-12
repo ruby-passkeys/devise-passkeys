@@ -4,7 +4,7 @@ module Devise
       MAXIMUM_PASSKEYS_PER_USER = 20
 
       def self.build
-        new(MAXIMUM_PASSKEYS_PER_USER)
+        new(maximum_passkeys_per_user: MAXIMUM_PASSKEYS_PER_USER)
       end
 
       def initialize(maximum_passkeys_per_user:)

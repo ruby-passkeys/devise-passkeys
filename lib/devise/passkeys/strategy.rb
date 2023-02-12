@@ -1,6 +1,5 @@
 require 'devise/strategies/authenticatable'
-require 'warden-webauthn'
-require 'devise/passkeys/passkey_issuer'
+require_relative 'passkey_issuer'
 
 module Devise
   module Strategies
