@@ -6,8 +6,6 @@ class UserPasskey < ActiveRecord::Base
 
   belongs_to :user, inverse_of: :passkeys
 
-  validates :sign_in_count, presence: true
-
   cattr_accessor :validations_performed
 
   after_validation :after_validation_callback
