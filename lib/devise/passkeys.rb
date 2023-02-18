@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'devise'
+require 'warden/webauthn'
 require_relative 'passkeys/rails'
 require_relative 'passkeys/model'
 require_relative 'passkeys/passkey_issuer'
