@@ -20,5 +20,3 @@ group :test do
   gem "database_cleaner-active_record"
   gem "database_cleaner-mongoid"
 end
-
-gem "warden-webauthn", git: "https://github.com/ruby-passkeys/warden-webauthn"
