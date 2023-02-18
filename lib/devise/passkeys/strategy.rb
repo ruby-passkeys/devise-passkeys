@@ -43,6 +43,10 @@ module Devise
         Devise::Passkeys::PasskeyIssuer::CredentialFinder.new(resource_class: mapping.to)
       end
 
+      def raw_credential
+        params.dig(mapping.singular, :passkey_credential)
+      end
+
       def record_passkey_use(passkey:)
         passkey.update_attribute(:last_used_at, Time.current)
       end
