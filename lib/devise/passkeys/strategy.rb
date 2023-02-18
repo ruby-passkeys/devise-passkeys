@@ -30,7 +30,6 @@ module Devise
           remember_me(resource)
           resource.after_passkey_authentication
           record_passkey_use(passkey: passkey)
-          update_sign_count(passkey: passkey, webauthn_credential: webauthn_credential)
           success!(resource)
           return
         end
@@ -49,10 +48,6 @@ module Devise
 
       def record_passkey_use(passkey:)
         passkey.update_attribute(:last_used_at, Time.current)
-      end
-
-      def update_sign_count(passkey:, webauthn_credential:)
-        passkey.update_attribute(:sign_count, webauthn_credential.sign_count)
       end
     end
   end
