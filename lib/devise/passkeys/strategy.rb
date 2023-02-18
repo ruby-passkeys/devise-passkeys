@@ -46,6 +46,10 @@ module Devise
         params.dig(mapping.singular, :passkey_credential)
       end
 
+      def authentication_challenge_key
+        "#{mapping.singular}_current_webauthn_authentication_challenge"
+      end
+
       def record_passkey_use(passkey:)
         passkey.update_attribute(:last_used_at, Time.current)
       end
