@@ -2,7 +2,6 @@
 
 source "https://rubygems.org"
 
-gem "warden-webauthn", git: "https://github.com/ruby-passkeys/warden-webauthn"
 gem "rails", "~> 6"
 
 group :development, :test do
