@@ -4,6 +4,7 @@ require 'devise'
 require 'warden/webauthn'
 require_relative 'passkeys/rails'
 require_relative 'passkeys/model'
+require_relative 'passkeys/controllers'
 require_relative 'passkeys/passkey_issuer'
 require_relative 'passkeys/strategy'
 require_relative "passkeys/version"
