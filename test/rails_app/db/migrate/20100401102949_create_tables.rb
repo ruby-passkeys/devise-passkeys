@@ -9,6 +9,8 @@ class CreateTables < superclass
     create_table :users do |t|
       t.string :username
 
+      t.string :webauthn_id
+
       ## Database authenticatable
       t.string :email,              null: false, default: ""
 
