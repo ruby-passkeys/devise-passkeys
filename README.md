@@ -64,7 +64,7 @@ rails g model Passkey user:references label:string external_id:string:index:uniq
 
 The following fields are required:
 
-- `label:string`
+- `label:string` (required, cannot be blank you'll want to scope it to the Devise-enabled model)
 - `external_id:string`
 - `public_key:string`
 - `sign_count:integer`
@@ -83,31 +83,20 @@ rails generate devise:views users
 
 If you're trying to keep your codebase small, these instructions only concern the `Users::SessionsController` & `Users::RegistrationsController`, so you can delete any other generated custom controllers if needed. You will likely need to modify the `views/users/shared/*` partials though, because they assume passwords are being used.
 
-4. Customize `Users::RegistrationsController`
+4. Include the passkeys concerns into your controllers
 
+Rather than having base classes, `Devise::Passkeys` has a series of concerns that can be mixed into your controllers. This allows you to change behavior, and does not keep you stuck down a path that could be incompatible with your existing authentication setup.
 
-Inheriting from `Devise::Passkeys::Controllers::RegistrationsController` provides you with a build in `new_challenge` method; which you'll need to setup in your routes.
-
-You'll need to setup the `relying_party`, following the documentation in the [`webauthn-ruby` advanced configuration](https://github.com/cedarcode/webauthn-ruby/blob/master/docs/advanced_configuration.md)
+Here are examples of common controllers
 
 ```ruby
-class Users::RegistrationsController < Devise::Passkeys::RegistrationsController
-  # ... any custom code you need
-
-  def relying_party
-     WebAuthn::RelyingParty.new(...)
-  end
+class Users::RegistrationsController < Devise::RegistrationsController
+  include Devise::Passkeys::Controllers::RegistrationsControllerConcern
 end
-```
 
-5. Customize `Users::SessionsController`
 
-Inheriting from `Devise::Passkeys::Controllers::SessionsController` provides you with a build in `new_challenge` method; which you'll need to setup in your routes.
-
-You'll need to setup the `relying_party`, following the documentation in the [`webauthn-ruby` advanced configuration](https://github.com/cedarcode/webauthn-ruby/blob/master/docs/advanced_configuration.md). You'll also need to make sure the `set_relying_party_in_request_env` uses said relying party.
-
-```ruby
-class Users::SessionsController < Devise::Passkeys::SessionsController
+class Users::SessionsController < Devise::SessionsController
+  include Devise::Passkeys::Controllers::SessionsControllerConcern
   # ... any custom code you need
 
   def relying_party
@@ -118,16 +107,11 @@ class Users::SessionsController < Devise::Passkeys::SessionsController
     request.env[relying_party_key] = relying_party
   end
 end
-```
 
-5. Customize `Users::ReauthenticationController`
+# frozen_string_literal: true
 
-Inheriting from `Devise::Passkeys::Controllers::ReauthenticationController` provides you with a build in `new_challenge` method; which you'll need to setup in your routes.
-
-You'll need to setup the `relying_party`, following the documentation in the [`webauthn-ruby` advanced configuration](https://github.com/cedarcode/webauthn-ruby/blob/master/docs/advanced_configuration.md). You'll also need to make sure the `set_relying_party_in_request_env` uses said relying party.
-
-```ruby
-class Users::ReauthenticationController < Devise::Passkeys::ReauthenticationController
+class Users::ReauthenticationController < DeviseController
+  include Devise::Passkeys::Controllers::ReauthenticationControllerConcern
   # ... any custom code you need
 
   def relying_party
@@ -138,16 +122,11 @@ class Users::ReauthenticationController < Devise::Passkeys::ReauthenticationCont
     request.env[relying_party_key] = relying_party
   end
 end
-```
 
-5. Customize `Users::PasskeysController`
+# frozen_string_literal: true
 
-Inheriting from `Devise::Passkeys::Controllers::PasskeysController` provides you with all the logic you'll need to setup in your routes.
-
-You'll need to setup the `relying_party`, following the documentation in the [`webauthn-ruby` advanced configuration](https://github.com/cedarcode/webauthn-ruby/blob/master/docs/advanced_configuration.md). You'll also need to make sure the `set_relying_party_in_request_env` uses said relying party.
-
-```ruby
-class Users::PasskeysController < Devise::Passkeys::PasskeysController
+class Users::PasskeysController < DeviseController
+  include Devise::Passkeys::Controllers::PasskeysControllerConcern
   # ... any custom code you need
 
   def relying_party
@@ -158,6 +137,7 @@ class Users::PasskeysController < Devise::Passkeys::PasskeysController
     request.env[relying_party_key] = relying_party
   end
 end
+
 ```
 
 6. Add necessary routes
@@ -191,6 +171,14 @@ devise_scope :user do
 end
 ```
 
+
+## What about the Webauthn javascript? Mailers? Error handling?
+
+You will have to implement these, since `Devise::Passkeys` is focused on the authentication handshakes, and each app is different (with different javascript setups, mailer needs, etc.)
+
+## I need to see it in action
+
+Here's a template repo! https://github.com/ruby-passkeys/devise-passkeys-template
 
 ## Development
 
