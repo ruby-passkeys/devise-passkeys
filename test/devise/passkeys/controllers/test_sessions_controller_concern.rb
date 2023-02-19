@@ -18,7 +18,7 @@ class Devise::Passkeys::Controllers::TestSessionsControllerConcern < ActionDispa
     end
 
     def resource_name
-      "user"
+      :user
     end
   end
 
