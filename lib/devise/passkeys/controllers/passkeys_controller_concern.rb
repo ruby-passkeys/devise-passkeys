@@ -113,6 +113,10 @@ module Devise
 
         def find_passkey
           @passkey = resource.passkeys.where(id: params[:id]).first
+          if @passkey.nil?
+            head :not_found
+            return
+          end
         end
 
         def verify_reauthentication_token
