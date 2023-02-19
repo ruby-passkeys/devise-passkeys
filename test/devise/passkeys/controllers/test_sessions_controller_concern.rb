@@ -24,7 +24,7 @@ class Devise::Passkeys::Controllers::TestSessionsControllerConcern < ActionDispa
 
   setup do
     Rails.application.routes.draw do
-      get '/session/new_challenge' => "devise/passkeys/controllers/test_sessions_controller_concern/test_session#new_challenge"
+      post '/session/new_challenge' => "devise/passkeys/controllers/test_sessions_controller_concern/test_session#new_challenge"
     end
   end
 
@@ -33,7 +33,7 @@ class Devise::Passkeys::Controllers::TestSessionsControllerConcern < ActionDispa
   end
 
   test "#new_challenge" do
-    get "/session/new_challenge"
+    post "/session/new_challenge"
 
     response_json = JSON.parse(response.body)
 
@@ -70,7 +70,7 @@ class Devise::Passkeys::Controllers::TestSessionsControllerConcernCustomization 
 
   setup do
     Rails.application.routes.draw do
-      get '/session/new_challenge' => "devise/passkeys/controllers/test_sessions_controller_concern_customization/test_session#new_challenge"
+      post '/session/new_challenge' => "devise/passkeys/controllers/test_sessions_controller_concern_customization/test_session#new_challenge"
     end
   end
 
@@ -79,7 +79,7 @@ class Devise::Passkeys::Controllers::TestSessionsControllerConcernCustomization 
   end
 
   test "#new_challenge" do
-    get "/session/new_challenge"
+    post "/session/new_challenge"
 
     response_json = JSON.parse(response.body)
 
@@ -104,7 +104,7 @@ class Devise::Passkeys::Controllers::TestSessionsControllerConcernSetup < Action
 
   setup do
     Rails.application.routes.draw do
-      get '/session/new_challenge' => "devise/passkeys/controllers/test_sessions_controller_concern_setup/test_session#new_challenge"
+      post '/session/new_challenge' => "devise/passkeys/controllers/test_sessions_controller_concern_setup/test_session#new_challenge"
     end
   end
 
@@ -114,7 +114,7 @@ class Devise::Passkeys::Controllers::TestSessionsControllerConcernSetup < Action
 
   test "#new_challenge: raises RuntimeError if set_relying_party_in_request_env has not been implemented" do
     assert_raises RuntimeError do
-      get "/session/new_challenge"
+      post "/session/new_challenge"
     end
   end
 end
