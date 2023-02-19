@@ -3,7 +3,7 @@ PATH
   specs:
     devise-passkeys (0.1.0)
       devise
-      warden-webauthn
+      warden-webauthn (>= 0.2.0)
 
 GEM
   remote: https://rubygems.org/
@@ -114,7 +114,7 @@ GEM
     unicode-display_width (2.4.2)
     warden (1.2.9)
       rack (>= 2.0.9)
-    warden-webauthn (0.1.0)
+    warden-webauthn (0.2.0)
       warden
       webauthn (>= 3)
     webauthn (3.0.0)
