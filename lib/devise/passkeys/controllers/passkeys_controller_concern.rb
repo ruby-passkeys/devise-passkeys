@@ -93,6 +93,11 @@ module Devise
         end
 
         def verify_passkey_challenge
+          if parsed_credential.nil?
+            render json: {message: find_message(:credential_missing_or_could_not_be_parsed)}, status: :bad_request
+            delete_registration_challenge
+            return false
+          end
           begin
             @webauthn_credential = verify_registration(relying_party: relying_party)
           rescue ::WebAuthn::Error => e
