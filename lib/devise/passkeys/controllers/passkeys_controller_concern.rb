@@ -30,6 +30,10 @@ module Devise
             return "#{resource_name}_passkey_creation_challenge"
           end
 
+          def errors
+            warden.errors
+          end
+
           def raw_credential
             passkey_params[:credential]
           end
