@@ -3,10 +3,7 @@
 source "https://rubygems.org"
 
 gem "rails", "~> 7"
-
-platforms :ruby do
-  gem "sqlite3", "~> 1.4"
-end
+gem "sqlite3"
 
 group :development, :test do
   gem "appraisal"

@@ -4,15 +4,16 @@ module SharedUser
   extend ActiveSupport::Concern
 
   included do
-    devise :confirmable, :lockable, :recoverable,
-           :rememberable, :timeoutable,
-           :trackable,
-           reconfirmable: false
+    devise :passkey_authenticatable, :registerable
 
     attr_accessor :other_key
 
     def self.passkeys_class
       UserPasskey
+    end
+
+    def self.find_for_passkey(passkey)
+      self.find_by(id: passkey.user.id)
     end
 
   end

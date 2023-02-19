@@ -3,6 +3,7 @@
 source "https://rubygems.org"
 
 gem "rails", "~> 6"
+gem "sqlite3"
 
 group :development, :test do
   gem "appraisal"
@@ -19,10 +20,5 @@ group :test do
   gem "database_cleaner-active_record"
   gem "database_cleaner-mongoid"
 end
-
-platforms :ruby do
-  gem "sqlite3", "~> 1.4"
-end
-
 
 gemspec path: "../"

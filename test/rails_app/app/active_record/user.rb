@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
   include Shim
   include SharedUser
 
-  has_many :passkeys, class_name: "UserPasskey"
+  has_many :passkeys, class_name: "UserPasskey", dependent: :destroy
 
   validates :sign_in_count, presence: true
 
