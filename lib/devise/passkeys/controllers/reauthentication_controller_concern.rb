@@ -36,7 +36,8 @@ module Devise
         end
 
         def reauthenticate
-          self.resource = warden.authenticate!(auth_options)
+          sign_out(resource)
+          self.resource = warden.authenticate!(strategy, auth_options)
           sign_in(resource, event: :passkey_reauthentication)
           yield resource if block_given?
 
@@ -50,9 +51,13 @@ module Devise
         protected
 
         def prepare_params
-          params[resource_name] = {
+          request.params[resource_name] =  ActionController::Parameters.new({
             passkey_credential: params[:passkey_credential]
-          }
+          })
+        end
+
+        def strategy
+          :passkey_reauthentication
         end
 
         def auth_options
