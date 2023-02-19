@@ -10,4 +10,5 @@ jobs:
           command: |
             gem install bundler -v 2.3.7
             bundle install
-            bundle exec rake
+            bundle exec appraisal
+            bundle exec appraisal rake test
