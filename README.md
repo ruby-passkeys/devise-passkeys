@@ -19,12 +19,6 @@ $ bundle
 
 # Usage
 
-0. Temporary step: copy `app/controllers/devise/passkeys/` controller code from template repo
-
-_This is a temporary step until the gem can implement a lightweight Rails engine_
-
-The files should be stored in: `app/controllers/devise/passkeys/**/*`
-
 1. Add `:passkey_authenticatable` in your Devise-enabled model
 
 ```ruby
