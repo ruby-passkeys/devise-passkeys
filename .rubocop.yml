@@ -34,3 +34,19 @@ Layout/LineLength:
 Lint/UselessAssignment:
   Exclude:
     - 'test/**/*.rb'
+
+Metrics/BlockLength:
+  Exclude:
+    - 'test/**/*.rb'
+
+Metrics/ClassLength:
+  Exclude:
+    - 'test/**/*.rb'
+
+Naming/VariableNumber:
+  Exclude:
+    - 'test/**/*.rb'
+
+Metrics/AbcSize:
+  Exclude:
+    - 'test/**/*.rb'
