@@ -10,8 +10,8 @@ jobs:
     steps:
       - checkout
       - ruby/install-deps
-      - command: bundle exec appraisal
-      - command: bundle exec appraisal rake test
+      - run: bundle exec appraisal
+      - run: bundle exec appraisal rake test
       - store_test_results:
           path: test/reports
       - store_artifacts:
@@ -22,7 +22,7 @@ jobs:
     steps:
       - checkout
       - ruby/install-deps
-      - command: bundle exec rubocop
+      - run: bundle exec rubocop
 
 workflows:
   build:
