@@ -25,6 +25,7 @@ jobs:
           name: Run the default task
           command: |
             gem install bundler -v 2.3.7
+            bundle install
             bundle exec rubocop
 
 workflows:
