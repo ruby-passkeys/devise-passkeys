@@ -15,8 +15,10 @@ module Devise
       def valid?
         return true unless parsed_credential.nil?
 
+        # rubocop:disable Lint/UnreachableCode
         fail(:credential_missing_or_could_not_be_parsed)
         false
+        # rubocop:enable Lint/UnreachableCode
       end
 
       def authenticate!

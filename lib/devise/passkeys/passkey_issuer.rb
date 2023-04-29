@@ -8,7 +8,9 @@ module Devise
       end
 
       def create_and_return_passkey(resource:, label:, webauthn_credential:, extra_attributes: {})
+        # rubocop:disable Lint/UselessAssignment
         passkey_class = passkey_class(resource)
+        # rubocop:enable Lint/UselessAssignment
 
         resource.passkeys.create!({
           label: label,
