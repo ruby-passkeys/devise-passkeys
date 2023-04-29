@@ -21,3 +21,16 @@ Style/SignalException:
 
 Style/ClassAndModuleChildren:
   Enabled: false
+
+Metrics/MethodLength:
+  Max: 50
+
+Metrics/ModuleLength:
+  Max: 300
+
+Layout/LineLength:
+  Max: 180
+
+Lint/UselessAssignment:
+  Exclude:
+    - 'test/**/*.rb'
