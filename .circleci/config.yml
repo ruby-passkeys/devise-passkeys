@@ -14,3 +14,5 @@ jobs:
             bundle exec appraisal rake test
       - store_test_results:
           path: test/reports
+      - store_artifacts:
+          path: coverage

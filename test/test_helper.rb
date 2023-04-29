@@ -21,3 +21,5 @@ if ENV["CIRCLECI"]
   require 'minitest/ci'
   Minitest::Ci.report_dir = "#{Minitest::Ci.report_dir}/#{Rails.version}"
 end
+
+SimpleCov.coverage_dir("coverage/#{Rails.version}")
