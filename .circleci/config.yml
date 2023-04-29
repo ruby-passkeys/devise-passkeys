@@ -1,15 +1,12 @@
 version: 2.1
-
-orbs:
-  ruby: circleci/ruby@2.0.0
-
 jobs:
   build:
     docker:
       - image: ruby:3.1.1
     steps:
       - checkout
-      - ruby/install-deps
+      - run: gem install bundler -v 2.3.7
+      - run: bundle install
       - run: bundle exec appraisal
       - run: bundle exec appraisal rake test
       - store_test_results:
@@ -21,7 +18,8 @@ jobs:
       - image: ruby:3.1.1
     steps:
       - checkout
-      - ruby/install-deps
+      - run: gem install bundler -v 2.3.7
+      - run: bundle install
       - run: bundle exec rubocop
 
 workflows:
