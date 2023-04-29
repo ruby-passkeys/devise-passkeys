@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require_relative '../../../test_helper/webauthn_test_helpers'
+require_relative "../../../test_helper/webauthn_test_helpers"
 
 class Devise::Passkeys::Controllers::TestSessionsControllerConcern < ActionDispatch::IntegrationTest
   include WebAuthnTestHelpers
@@ -24,7 +24,7 @@ class Devise::Passkeys::Controllers::TestSessionsControllerConcern < ActionDispa
 
   setup do
     Rails.application.routes.draw do
-      post '/session/new_challenge' => "devise/passkeys/controllers/test_sessions_controller_concern/test_session#new_challenge"
+      post "/session/new_challenge" => "devise/passkeys/controllers/test_sessions_controller_concern/test_session#new_challenge"
     end
   end
 
@@ -70,7 +70,7 @@ class Devise::Passkeys::Controllers::TestSessionsControllerConcernCustomization 
 
   setup do
     Rails.application.routes.draw do
-      post '/session/new_challenge' => "devise/passkeys/controllers/test_sessions_controller_concern_customization/test_session#new_challenge"
+      post "/session/new_challenge" => "devise/passkeys/controllers/test_sessions_controller_concern_customization/test_session#new_challenge"
     end
   end
 
@@ -104,7 +104,7 @@ class Devise::Passkeys::Controllers::TestSessionsControllerConcernSetup < Action
 
   setup do
     Rails.application.routes.draw do
-      post '/session/new_challenge' => "devise/passkeys/controllers/test_sessions_controller_concern_setup/test_session#new_challenge"
+      post "/session/new_challenge" => "devise/passkeys/controllers/test_sessions_controller_concern_setup/test_session#new_challenge"
     end
   end
 

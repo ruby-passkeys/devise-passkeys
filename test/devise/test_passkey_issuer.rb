@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require_relative '../test_helper/webauthn_test_helpers'
+require_relative "../test_helper/webauthn_test_helpers"
 
 class Devise::TestPasskeyIssuer < ActiveSupport::TestCase
   include WebAuthnTestHelpers
@@ -42,7 +42,7 @@ class Devise::TestPasskeyIssuer < ActiveSupport::TestCase
       resource: user,
       label: "Test Key",
       webauthn_credential: credential,
-      extra_attributes: {last_used_at: registration_time, sign_count: 234}
+      extra_attributes: { last_used_at: registration_time, sign_count: 234 }
     )
     assert_equal true, passkey.persisted?
 

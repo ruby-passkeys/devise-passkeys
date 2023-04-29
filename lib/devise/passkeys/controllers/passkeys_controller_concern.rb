@@ -27,7 +27,7 @@ module Devise
           end
 
           def registration_challenge_key
-            return "#{resource_name}_passkey_creation_challenge"
+            "#{resource_name}_passkey_creation_challenge"
           end
 
           def errors
@@ -58,7 +58,7 @@ module Devise
         def new_destroy_challenge
           allowed_passkeys = (resource.passkeys - [@passkey])
 
-          options_for_authentication = generate_authentication_options(relying_party: relying_party, options: {allow: allowed_passkeys.pluck(:external_id)})
+          options_for_authentication = generate_authentication_options(relying_party: relying_party, options: { allow: allowed_passkeys.pluck(:external_id) })
 
           store_reauthentication_challenge_in_session(options_for_authentication: options_for_authentication)
 
@@ -94,7 +94,7 @@ module Devise
 
         def verify_passkey_challenge
           if parsed_credential.nil?
-            render json: {message: find_message(:credential_missing_or_could_not_be_parsed)}, status: :bad_request
+            render json: { message: find_message(:credential_missing_or_could_not_be_parsed) }, status: :bad_request
             delete_registration_challenge
             return false
           end
@@ -102,7 +102,7 @@ module Devise
             @webauthn_credential = verify_registration(relying_party: relying_party)
           rescue ::WebAuthn::Error => e
             error_key = Warden::WebAuthn::ErrorKeyFinder.webauthn_error_key(exception: e)
-            render json: {message: find_message(error_key)}, status: :bad_request
+            render json: { message: find_message(error_key) }, status: :bad_request
           end
         end
 
@@ -112,7 +112,7 @@ module Devise
 
         def ensure_at_least_one_passkey
           if current_user.passkeys.count <= 1
-            render json: {error: find_message(:must_be_at_least_one_passkey)}, status: :bad_request
+            render json: { error: find_message(:must_be_at_least_one_passkey) }, status: :bad_request
           end
         end
 
@@ -120,13 +120,13 @@ module Devise
           @passkey = resource.passkeys.where(id: params[:id]).first
           if @passkey.nil?
             head :not_found
-            return
+            nil
           end
         end
 
         def verify_reauthentication_token
           if !valid_reauthentication_token?(given_reauthentication_token: reauthentication_params[:reauthentication_token])
-            render json: {error: find_message(:not_reauthenticated)}, status: :bad_request
+            render json: { error: find_message(:not_reauthenticated) }, status: :bad_request
           end
         end
 

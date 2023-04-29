@@ -2,14 +2,14 @@ require "webauthn/fake_client"
 
 module WebAuthnTestHelpers
   def example_relying_party(options: {})
-    return WebAuthn::RelyingParty.new(**{
+    WebAuthn::RelyingParty.new(**{
       origin: "https://example.test",
       name: "Example Relying Party"
     }.merge(options))
   end
 
   def fake_client(origin: "https://example.test")
-    return WebAuthn::FakeClient.new(origin)
+    WebAuthn::FakeClient.new(origin)
   end
 
   def generate_raw_challenge
@@ -61,6 +61,6 @@ module WebAuthnTestHelpers
       relying_party: relying_party
     )
 
-    return response.credential
+    response.credential
   end
 end

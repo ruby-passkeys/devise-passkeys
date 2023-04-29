@@ -8,7 +8,7 @@ module Devise
           extend ActiveSupport::Concern
 
           def passkey_reauthentication_challenge_session_key
-            return "#{resource_name}_current_reauthentication_challenge"
+            "#{resource_name}_current_reauthentication_challenge"
           end
 
           def store_reauthentication_challenge_in_session(options_for_authentication:)

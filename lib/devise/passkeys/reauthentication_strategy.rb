@@ -1,5 +1,5 @@
-require 'devise/strategies/authenticatable'
-require_relative 'passkey_issuer'
+require "devise/strategies/authenticatable"
+require_relative "passkey_issuer"
 
 module Devise
   module Strategies

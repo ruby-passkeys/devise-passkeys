@@ -18,7 +18,7 @@ require "devise/passkeys"
 require "minitest/autorun"
 
 if ENV["CIRCLECI"]
-  require 'minitest/ci'
+  require "minitest/ci"
   Minitest::Ci.report_dir = "#{Minitest::Ci.report_dir}/#{Rails.version}"
 end
 

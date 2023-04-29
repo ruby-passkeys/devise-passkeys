@@ -28,7 +28,7 @@ module Devise
         end
 
         def new_challenge
-          options_for_authentication = generate_authentication_options(relying_party: relying_party, options: {allow: resource.passkeys.pluck(:external_id)})
+          options_for_authentication = generate_authentication_options(relying_party: relying_party, options: { allow: resource.passkeys.pluck(:external_id) })
 
           store_reauthentication_challenge_in_session(options_for_authentication: options_for_authentication)
 
@@ -43,7 +43,7 @@ module Devise
 
           store_reauthentication_token_in_session
 
-          render json: {reauthentication_token: stored_reauthentication_token}
+          render json: { reauthentication_token: stored_reauthentication_token }
         ensure
           delete_reauthentication_challenge
         end

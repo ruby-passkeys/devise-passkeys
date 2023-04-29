@@ -22,7 +22,7 @@ module Devise
           def consume_reauthentication_token!
             value = stored_reauthentication_token
             clear_reauthentication_token!
-            return value
+            value
           end
 
           def valid_reauthentication_token?(given_reauthentication_token:)
@@ -30,7 +30,7 @@ module Devise
           end
 
           def passkey_reauthentication_token_key
-            return "#{resource_name}_current_reauthentication_token"
+            "#{resource_name}_current_reauthentication_token"
           end
         end
       end

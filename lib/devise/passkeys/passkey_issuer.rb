@@ -8,7 +8,7 @@ module Devise
       def create_and_return_passkey(resource:, label:, webauthn_credential:, extra_attributes: {})
         passkey_class = passkey_class(resource)
 
-        return resource.passkeys.create!({
+        resource.passkeys.create!({
           label: label,
           public_key: webauthn_credential.public_key,
           external_id: Base64.strict_encode64(webauthn_credential.raw_id),
@@ -38,9 +38,9 @@ module Devise
         if resource.respond_to?(:association) # ActiveRecord
           resource.association(:passkeys).klass
         elsif resource.respond_to?(:relations) # Mongoid
-          resource.relations['passkeys'].klass
+          resource.relations["passkeys"].klass
         else
-          raise 'Cannot determine passkey class, unsupported ORM/ODM?'
+          raise "Cannot determine passkey class, unsupported ORM/ODM?"
         end
       end
     end

@@ -71,7 +71,7 @@ module Devise
 
         def verify_reauthentication_token
           if !valid_reauthentication_token?(given_reauthentication_token: reauthentication_params[:reauthentication_token])
-            render json: {error: find_message(:not_reauthenticated)}, status: :bad_request
+            render json: { error: find_message(:not_reauthenticated) }, status: :bad_request
           end
         end
 
@@ -94,16 +94,16 @@ module Devise
 
         def require_email_and_passkey_label
           if sign_up_params[:email].blank?
-            render json: {message: find_message(:email_missing)}, status: :bad_request
+            render json: { message: find_message(:email_missing) }, status: :bad_request
             return false
           end
 
           if passkey_params[:passkey_label].blank?
-            render json: {message: find_message(:passkey_label_missing)}, status: :bad_request
+            render json: { message: find_message(:passkey_label_missing) }, status: :bad_request
             return false
           end
 
-          return true
+          true
         end
 
         def verify_passkey_registration_challenge
@@ -111,7 +111,7 @@ module Devise
             @webauthn_credential = verify_registration(relying_party: relying_party)
           rescue ::WebAuthn::Error => e
             error_key = Warden::WebAuthn::ErrorKeyFinder.webauthn_error_key(exception: e)
-            render json: {message: find_message(error_key)}, status: :bad_request
+            render json: { message: find_message(error_key) }, status: :bad_request
           end
         end
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require_relative '../../../test_helper/webauthn_test_helpers'
+require_relative "../../../test_helper/webauthn_test_helpers"
 
 class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < ActionDispatch::IntegrationTest
   include WebAuthnTestHelpers
@@ -21,7 +21,7 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
     # Dummy action to setup reauthentication token
     def reauthenticate
       store_reauthentication_token_in_session
-      render json: {token: stored_reauthentication_token}
+      render json: { token: stored_reauthentication_token }
     end
 
     def resource_name
@@ -32,11 +32,11 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
   setup do
     Rails.application.routes.draw do
       devise_scope :user do
-        post '/registration/new_challenge' => "devise/passkeys/controllers/test_registrations_controller_concern/test_registration#new_challenge"
-        post '/registration' => "devise/passkeys/controllers/test_registrations_controller_concern/test_registration#create"
-        post '/registration/reauthenticate' => "devise/passkeys/controllers/test_registrations_controller_concern/test_registration#reauthenticate"
-        patch '/registration' => "devise/passkeys/controllers/test_registrations_controller_concern/test_registration#update"
-        delete '/registration' => "devise/passkeys/controllers/test_registrations_controller_concern/test_registration#destroy"
+        post "/registration/new_challenge" => "devise/passkeys/controllers/test_registrations_controller_concern/test_registration#new_challenge"
+        post "/registration" => "devise/passkeys/controllers/test_registrations_controller_concern/test_registration#create"
+        post "/registration/reauthenticate" => "devise/passkeys/controllers/test_registrations_controller_concern/test_registration#reauthenticate"
+        patch "/registration" => "devise/passkeys/controllers/test_registrations_controller_concern/test_registration#update"
+        delete "/registration" => "devise/passkeys/controllers/test_registrations_controller_concern/test_registration#destroy"
       end
     end
   end
@@ -54,7 +54,7 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
   end
 
   test "#new_challenge: not signed in" do
-    post "/registration/new_challenge", params: {user: {email: "test@test.com", passkey_label: "Test"}}
+    post "/registration/new_challenge", params: { user: { email: "test@test.com", passkey_label: "Test" } }
 
     response_json = JSON.parse(response.body)
     assert_response :ok
@@ -73,14 +73,14 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
     assert_equal 120_000, response_json["timeout"]
     assert_equal ({}), response_json["extensions"]
     assert_empty response_json["excludeCredentials"]
-    assert_equal ({"userVerification" => "required"}), response_json["authenticatorSelection"]
+    assert_equal ({ "userVerification" => "required" }), response_json["authenticatorSelection"]
   end
 
   test "#create: success" do
-    relying_party = example_relying_party(options: {origin: "www.example.com"})
+    relying_party = example_relying_party(options: { origin: "www.example.com" })
     client = fake_client(origin: "https://www.example.com")
 
-    post "/registration/new_challenge", params: {user: {email: "test@test.com", passkey_label: "Test"}}
+    post "/registration/new_challenge", params: { user: { email: "test@test.com", passkey_label: "Test" } }
 
     webauthn_id = session["user_current_webauthn_user_id"]
 
@@ -111,7 +111,7 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
 
     assert_difference "User.count", +1 do
     assert_difference "UserPasskey.count", +1 do
-      post "/registration", params: {user: {email: "test@test.com", passkey_label: "Test", passkey_credential: raw_credential.to_json}}
+      post "/registration", params: { user: { email: "test@test.com", passkey_label: "Test", passkey_credential: raw_credential.to_json } }
 
       assert_redirected_to "http://www.example.com/"
     end
@@ -133,10 +133,10 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
   end
 
   test "#create: user not verified" do
-    relying_party = example_relying_party(options: {origin: "www.example.com"})
+    relying_party = example_relying_party(options: { origin: "www.example.com" })
     client = fake_client(origin: "https://www.example.com")
 
-    post "/registration/new_challenge", params: {user: {email: "test@test.com", passkey_label: "Test"}}
+    post "/registration/new_challenge", params: { user: { email: "test@test.com", passkey_label: "Test" } }
 
     webauthn_id = session["user_current_webauthn_user_id"]
 
@@ -147,19 +147,19 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
 
     assert_no_difference "User.count" do
     assert_no_difference "UserPasskey.count" do
-      post "/registration", params: {user: {email: "test@test.com", passkey_label: "Test", passkey_credential: raw_credential.to_json}}
+      post "/registration", params: { user: { email: "test@test.com", passkey_label: "Test", passkey_credential: raw_credential.to_json } }
 
       assert_response :bad_request
-      assert_equal ({"message" => "translation missing: en.devise.registrations.user.webauthn_user_verified_verification_error"}), response.parsed_body
+      assert_equal ({ "message" => "translation missing: en.devise.registrations.user.webauthn_user_verified_verification_error" }), response.parsed_body
     end
     end
   end
 
   test "#create: bad challenge" do
-    relying_party = example_relying_party(options: {origin: "www.example.com"})
+    relying_party = example_relying_party(options: { origin: "www.example.com" })
     client = fake_client(origin: "https://www.example.com")
 
-    post "/registration/new_challenge", params: {user: {email: "test@test.com", passkey_label: "Test"}}
+    post "/registration/new_challenge", params: { user: { email: "test@test.com", passkey_label: "Test" } }
 
     webauthn_id = session["user_current_webauthn_user_id"]
 
@@ -170,19 +170,19 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
 
     assert_no_difference "User.count" do
     assert_no_difference "UserPasskey.count" do
-      post "/registration", params: {user: {email: "test@test.com", passkey_label: "Test", passkey_credential: raw_credential.to_json}}
+      post "/registration", params: { user: { email: "test@test.com", passkey_label: "Test", passkey_credential: raw_credential.to_json } }
 
       assert_response :bad_request
-      assert_equal ({"message" => "translation missing: en.devise.registrations.user.webauthn_challenge_verification_error"}), response.parsed_body
+      assert_equal ({ "message" => "translation missing: en.devise.registrations.user.webauthn_challenge_verification_error" }), response.parsed_body
     end
     end
   end
 
   test "#create: credential cannot be parsed" do
-    relying_party = example_relying_party(options: {origin: "www.example.com"})
+    relying_party = example_relying_party(options: { origin: "www.example.com" })
     client = fake_client(origin: "https://www.example.com")
 
-    post "/registration/new_challenge", params: {user: {email: "test@test.com", passkey_label: "Test"}}
+    post "/registration/new_challenge", params: { user: { email: "test@test.com", passkey_label: "Test" } }
 
     webauthn_id = session["user_current_webauthn_user_id"]
 
@@ -192,17 +192,17 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
     assert_no_difference "User.count" do
     assert_no_difference "UserPasskey.count" do
     assert_raises JSON::ParserError do
-      post "/registration", params: {user: {email: "test@test.com", passkey_label: "Test", passkey_credential: "blah"}}
+      post "/registration", params: { user: { email: "test@test.com", passkey_label: "Test", passkey_credential: "blah" } }
     end
     end
     end
   end
 
   test "#create: credential missing" do
-    relying_party = example_relying_party(options: {origin: "www.example.com"})
+    relying_party = example_relying_party(options: { origin: "www.example.com" })
     client = fake_client(origin: "https://www.example.com")
 
-    post "/registration/new_challenge", params: {user: {email: "test@test.com", passkey_label: "Test"}}
+    post "/registration/new_challenge", params: { user: { email: "test@test.com", passkey_label: "Test" } }
 
     webauthn_id = session["user_current_webauthn_user_id"]
 
@@ -212,17 +212,17 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
     assert_no_difference "User.count" do
     assert_no_difference "UserPasskey.count" do
     assert_raises TypeError do
-      post "/registration", params: {user: {email: "test@test.com", passkey_label: "Test"}}
+      post "/registration", params: { user: { email: "test@test.com", passkey_label: "Test" } }
     end
     end
     end
   end
 
   test "#create: passkey label missing" do
-    relying_party = example_relying_party(options: {origin: "www.example.com"})
+    relying_party = example_relying_party(options: { origin: "www.example.com" })
     client = fake_client(origin: "https://www.example.com")
 
-    post "/registration/new_challenge", params: {user: {email: "test@test.com", passkey_label: "Test"}}
+    post "/registration/new_challenge", params: { user: { email: "test@test.com", passkey_label: "Test" } }
 
     webauthn_id = session["user_current_webauthn_user_id"]
 
@@ -233,19 +233,19 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
 
     assert_no_difference "User.count" do
     assert_no_difference "UserPasskey.count" do
-      post "/registration", params: {user: { email: "test@test.com", passkey_credential: raw_credential.to_json}}
+      post "/registration", params: { user: { email: "test@test.com", passkey_credential: raw_credential.to_json } }
 
       assert_response :bad_request
-      assert_equal ({"message" => "translation missing: en.devise.registrations.user.passkey_label_missing"}), response.parsed_body
+      assert_equal ({ "message" => "translation missing: en.devise.registrations.user.passkey_label_missing" }), response.parsed_body
     end
     end
   end
 
   test "#create: non-passkey attribute missing" do
-    relying_party = example_relying_party(options: {origin: "www.example.com"})
+    relying_party = example_relying_party(options: { origin: "www.example.com" })
     client = fake_client(origin: "https://www.example.com")
 
-    post "/registration/new_challenge", params: {user: {email: "test@test.com", passkey_label: "Test"}}
+    post "/registration/new_challenge", params: { user: { email: "test@test.com", passkey_label: "Test" } }
 
     webauthn_id = session["user_current_webauthn_user_id"]
 
@@ -256,16 +256,16 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
 
     assert_no_difference "User.count" do
     assert_no_difference "UserPasskey.count" do
-      post "/registration", params: {user: {passkey_label: "Test", passkey_credential: raw_credential.to_json}}
+      post "/registration", params: { user: { passkey_label: "Test", passkey_credential: raw_credential.to_json } }
 
       assert_response :bad_request
-      assert_equal ({"message" => "translation missing: en.devise.registrations.user.email_missing"}), response.parsed_body
+      assert_equal ({ "message" => "translation missing: en.devise.registrations.user.email_missing" }), response.parsed_body
     end
     end
   end
 
   test "#create: did not complete challenge" do
-    relying_party = example_relying_party(options: {origin: "www.example.com"})
+    relying_party = example_relying_party(options: { origin: "www.example.com" })
     client = fake_client(origin: "https://www.example.com")
 
     raw_credential = client.create(challenge: encode_challenge, user_verified: false)
@@ -273,7 +273,7 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
     assert_no_difference "User.count" do
     assert_no_difference "UserPasskey.count" do
     assert_raises NoMethodError do
-      post "/registration", params: {user: { email: "test@test.com", passkey_label: "Test", passkey_credential: raw_credential.to_json}}
+      post "/registration", params: { user: { email: "test@test.com", passkey_label: "Test", passkey_credential: raw_credential.to_json } }
     end
     end
     end
@@ -283,13 +283,13 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
     user = User.create!(email: "test@test.com")
     sign_in(user)
 
-    post '/registration/reauthenticate'
+    post "/registration/reauthenticate"
     refute_nil session["user_current_reauthentication_token"]
     token = response.parsed_body["token"]
 
     assert_no_difference "User.count" do
     assert_no_difference "UserPasskey.count" do
-      patch "/registration", params: {user: {email: "hello@example.com", reauthentication_token: token}}
+      patch "/registration", params: { user: { email: "hello@example.com", reauthentication_token: token } }
     end
     end
 
@@ -306,12 +306,12 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
 
     assert_no_difference "User.count" do
     assert_no_difference "UserPasskey.count" do
-      patch "/registration", params: {user: {email: "hello@example.com", reauthentication_token: "asdasdasdasd"}}
+      patch "/registration", params: { user: { email: "hello@example.com", reauthentication_token: "asdasdasdasd" } }
     end
     end
 
     assert_response :bad_request
-    assert_equal ({"error" => "translation missing: en.devise.registrations.user.not_reauthenticated"}), response.parsed_body
+    assert_equal ({ "error" => "translation missing: en.devise.registrations.user.not_reauthenticated" }), response.parsed_body
 
     assert_equal "test@test.com", user.reload.email
 
@@ -322,18 +322,18 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
     user = User.create!(email: "test@test.com")
     sign_in(user)
 
-    post '/registration/reauthenticate'
+    post "/registration/reauthenticate"
     refute_nil session["user_current_reauthentication_token"]
     token = response.parsed_body["token"]
 
     assert_no_difference "User.count" do
     assert_no_difference "UserPasskey.count" do
-      patch "/registration", params: {user: {email: "hello@example.com"}}
+      patch "/registration", params: { user: { email: "hello@example.com" } }
     end
     end
 
     assert_response :bad_request
-    assert_equal ({"error" => "translation missing: en.devise.registrations.user.not_reauthenticated"}), response.parsed_body
+    assert_equal ({ "error" => "translation missing: en.devise.registrations.user.not_reauthenticated" }), response.parsed_body
 
     assert_equal "test@test.com", user.reload.email
 
@@ -344,18 +344,18 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
     user = User.create!(email: "test@test.com")
     sign_in(user)
 
-    post '/registration/reauthenticate'
+    post "/registration/reauthenticate"
     refute_nil session["user_current_reauthentication_token"]
     token = response.parsed_body["token"]
 
     assert_no_difference "User.count" do
     assert_no_difference "UserPasskey.count" do
-      patch "/registration", params: {user: {email: "hello@example.com", reauthentication_token: "blah"}}
+      patch "/registration", params: { user: { email: "hello@example.com", reauthentication_token: "blah" } }
     end
     end
 
     assert_response :bad_request
-    assert_equal ({"error" => "translation missing: en.devise.registrations.user.not_reauthenticated"}), response.parsed_body
+    assert_equal ({ "error" => "translation missing: en.devise.registrations.user.not_reauthenticated" }), response.parsed_body
 
     assert_equal "test@test.com", user.reload.email
 
@@ -368,13 +368,13 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
 
     user.passkeys.create!(label: "dummy", external_id: "dummy-passkey", public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
 
-    post '/registration/reauthenticate'
+    post "/registration/reauthenticate"
     refute_nil session["user_current_reauthentication_token"]
     token = response.parsed_body["token"]
 
     assert_difference "User.count", -1 do
     assert_difference "UserPasskey.count", -1 do
-      delete "/registration", params: {user: {reauthentication_token: token}}
+      delete "/registration", params: { user: { reauthentication_token: token } }
     end
     end
 
@@ -391,12 +391,12 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
 
     assert_no_difference "User.count" do
     assert_no_difference "UserPasskey.count" do
-      delete "/registration", params: {user: { reauthentication_token: "asdasdasdasd"}}
+      delete "/registration", params: { user: { reauthentication_token: "asdasdasdasd" } }
     end
     end
 
     assert_response :bad_request
-    assert_equal ({"error" => "translation missing: en.devise.registrations.user.not_reauthenticated"}), response.parsed_body
+    assert_equal ({ "error" => "translation missing: en.devise.registrations.user.not_reauthenticated" }), response.parsed_body
 
     assert_equal "test@test.com", user.reload.email
 
@@ -407,18 +407,18 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
     user = User.create!(email: "test@test.com")
     sign_in(user)
 
-    post '/registration/reauthenticate'
+    post "/registration/reauthenticate"
     refute_nil session["user_current_reauthentication_token"]
     token = response.parsed_body["token"]
 
     assert_no_difference "User.count" do
     assert_no_difference "UserPasskey.count" do
-      delete "/registration", params: {user: {test: 123}}
+      delete "/registration", params: { user: { test: 123 } }
     end
     end
 
     assert_response :bad_request
-    assert_equal ({"error" => "translation missing: en.devise.registrations.user.not_reauthenticated"}), response.parsed_body
+    assert_equal ({ "error" => "translation missing: en.devise.registrations.user.not_reauthenticated" }), response.parsed_body
 
     assert_equal "test@test.com", user.reload.email
 
@@ -429,18 +429,18 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
     user = User.create!(email: "test@test.com")
     sign_in(user)
 
-    post '/registration/reauthenticate'
+    post "/registration/reauthenticate"
     refute_nil session["user_current_reauthentication_token"]
     token = response.parsed_body["token"]
 
     assert_no_difference "User.count" do
     assert_no_difference "UserPasskey.count" do
-      delete "/registration", params: {user: {reauthentication_token: "blah"}}
+      delete "/registration", params: { user: { reauthentication_token: "blah" } }
     end
     end
 
     assert_response :bad_request
-    assert_equal ({"error" => "translation missing: en.devise.registrations.user.not_reauthenticated"}), response.parsed_body
+    assert_equal ({ "error" => "translation missing: en.devise.registrations.user.not_reauthenticated" }), response.parsed_body
 
     assert_equal "test@test.com", user.reload.email
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require_relative '../../../test_helper/webauthn_test_helpers'
+require_relative "../../../test_helper/webauthn_test_helpers"
 
 class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < ActionDispatch::IntegrationTest
   include WebAuthnTestHelpers
@@ -31,8 +31,8 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
   setup do
     Rails.application.routes.draw do
-      post '/reauthentication/new_challenge' => "devise/passkeys/controllers/test_reauthentication_controller_concern/test_reauthentication#new_challenge"
-      post '/reauthentication/reauthenticate' => "devise/passkeys/controllers/test_reauthentication_controller_concern/test_reauthentication#reauthenticate"
+      post "/reauthentication/new_challenge" => "devise/passkeys/controllers/test_reauthentication_controller_concern/test_reauthentication#new_challenge"
+      post "/reauthentication/reauthenticate" => "devise/passkeys/controllers/test_reauthentication_controller_concern/test_reauthentication#reauthenticate"
     end
   end
 
@@ -53,7 +53,7 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
     end
 
     allowed_passkey_ids = user.passkeys.pluck(:external_id).map do |id|
-      {"type" => "public-key", "id" => id}
+      { "type" => "public-key", "id" => id }
     end
 
 
@@ -70,7 +70,7 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
   end
 
   test "#reauthenticate: success" do
-    relying_party = example_relying_party(options: {origin: "www.example.com"})
+    relying_party = example_relying_party(options: { origin: "www.example.com" })
     client = fake_client(origin: "https://www.example.com")
     credential = create_credential(client: client, relying_party: relying_party)
 
@@ -90,16 +90,16 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     assertion = assertion_from_client(client: client, challenge: JSON.parse(response.body)["challenge"], user_verified: true)
 
-    post "/reauthentication/reauthenticate", params: {passkey_credential: assertion.to_json}, as: :json
+    post "/reauthentication/reauthenticate", params: { passkey_credential: assertion.to_json }, as: :json
 
     response_json = JSON.parse(response.body)
 
-    assert_equal ({"reauthentication_token" => session["user_current_reauthentication_token"] }), response_json
+    assert_equal ({ "reauthentication_token" => session["user_current_reauthentication_token"] }), response_json
     assert_nil session["user_current_reauthentication_challenge"]
   end
 
   test "#reauthenticate: user not verified" do
-    relying_party = example_relying_party(options: {origin: "www.example.com"})
+    relying_party = example_relying_party(options: { origin: "www.example.com" })
     client = fake_client(origin: "https://www.example.com")
     credential = create_credential(client: client, relying_party: relying_party)
 
@@ -119,17 +119,17 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     assertion = assertion_from_client(client: client, challenge: JSON.parse(response.body)["challenge"], user_verified: false)
 
-    post "/reauthentication/reauthenticate", params: {passkey_credential: assertion.to_json}, as: :json
+    post "/reauthentication/reauthenticate", params: { passkey_credential: assertion.to_json }, as: :json
 
     response_json = JSON.parse(response.body)
 
-    assert_equal ({"error"=>"translation missing: en.devise.failure.user.webauthn_user_verified_verification_error"}), response.parsed_body
+    assert_equal ({ "error"=>"translation missing: en.devise.failure.user.webauthn_user_verified_verification_error" }), response.parsed_body
     assert_nil session["user_current_reauthentication_challenge"]
     assert_response :unauthorized
   end
 
   test "#reauthenticate: bad challenge" do
-    relying_party = example_relying_party(options: {origin: "www.example.com"})
+    relying_party = example_relying_party(options: { origin: "www.example.com" })
     client = fake_client(origin: "https://www.example.com")
     credential = create_credential(client: client, relying_party: relying_party)
 
@@ -149,17 +149,17 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     assertion = assertion_from_client(client: client, challenge: "blah", user_verified: true)
 
-    post "/reauthentication/reauthenticate", params: {passkey_credential: assertion.to_json}, as: :json
+    post "/reauthentication/reauthenticate", params: { passkey_credential: assertion.to_json }, as: :json
 
     response_json = JSON.parse(response.body)
 
-    assert_equal ({"error"=>"translation missing: en.devise.failure.user.webauthn_challenge_verification_error"}), response.parsed_body
+    assert_equal ({ "error"=>"translation missing: en.devise.failure.user.webauthn_challenge_verification_error" }), response.parsed_body
     assert_nil session["user_current_reauthentication_challenge"]
     assert_response :unauthorized
   end
 
   test "#reauthenticate: credential removed" do
-    relying_party = example_relying_party(options: {origin: "www.example.com"})
+    relying_party = example_relying_party(options: { origin: "www.example.com" })
     client = fake_client(origin: "https://www.example.com")
     credential = create_credential(client: client, relying_party: relying_party)
 
@@ -181,17 +181,17 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     passkey.destroy
 
-    post "/reauthentication/reauthenticate", params: {passkey_credential: assertion.to_json}, as: :json
+    post "/reauthentication/reauthenticate", params: { passkey_credential: assertion.to_json }, as: :json
 
     response_json = JSON.parse(response.body)
 
-    assert_equal ({"error"=>"translation missing: en.devise.failure.user.stored_credential_not_found"}), response.parsed_body
+    assert_equal ({ "error"=>"translation missing: en.devise.failure.user.stored_credential_not_found" }), response.parsed_body
     assert_nil session["user_current_reauthentication_challenge"]
     assert_response :unauthorized
   end
 
   test "#reauthenticate: credential cannot be parsed" do
-    relying_party = example_relying_party(options: {origin: "www.example.com"})
+    relying_party = example_relying_party(options: { origin: "www.example.com" })
     client = fake_client(origin: "https://www.example.com")
     credential = create_credential(client: client, relying_party: relying_party)
 
@@ -213,17 +213,17 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     passkey.destroy
 
-    post "/reauthentication/reauthenticate", params: {passkey_credential: "blah"}, as: :json
+    post "/reauthentication/reauthenticate", params: { passkey_credential: "blah" }, as: :json
 
     response_json = JSON.parse(response.body)
 
-    assert_equal ({"error"=>"You need to sign in or sign up before continuing."}), response.parsed_body
+    assert_equal ({ "error"=>"You need to sign in or sign up before continuing." }), response.parsed_body
     assert_nil session["user_current_reauthentication_challenge"]
     assert_response :unauthorized
   end
 
   test "#reauthenticate: credential missing" do
-    relying_party = example_relying_party(options: {origin: "www.example.com"})
+    relying_party = example_relying_party(options: { origin: "www.example.com" })
     client = fake_client(origin: "https://www.example.com")
     credential = create_credential(client: client, relying_party: relying_party)
 
@@ -245,17 +245,17 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     passkey.destroy
 
-    post "/reauthentication/reauthenticate", params: {other: 1234}, as: :json
+    post "/reauthentication/reauthenticate", params: { other: 1234 }, as: :json
 
     response_json = JSON.parse(response.body)
 
-    assert_equal ({"error"=>"You need to sign in or sign up before continuing."}), response.parsed_body
+    assert_equal ({ "error"=>"You need to sign in or sign up before continuing." }), response.parsed_body
     assert_nil session["user_current_reauthentication_challenge"]
     assert_response :unauthorized
   end
 
   test "#reauthenticate: not signed in" do
-    relying_party = example_relying_party(options: {origin: "test.host"})
+    relying_party = example_relying_party(options: { origin: "test.host" })
     client = fake_client
     credential = create_credential(client: client, relying_party: relying_party)
 
@@ -276,8 +276,8 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     sign_out(user)
 
-    post "/reauthentication/reauthenticate", params: {passkey_credential: assertion.to_json}, as: :json
-    assert_equal ({"error" => "You need to sign in or sign up before continuing."}), response.parsed_body
+    post "/reauthentication/reauthenticate", params: { passkey_credential: assertion.to_json }, as: :json
+    assert_equal ({ "error" => "You need to sign in or sign up before continuing." }), response.parsed_body
     assert_response :unauthorized
   end
 end
@@ -303,8 +303,8 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcernSetup 
 
   setup do
     Rails.application.routes.draw do
-      post '/reauthentication/new_challenge' => "devise/passkeys/controllers/test_reauthentication_controller_concern_setup/test_reauthentication#new_challenge"
-      post '/reauthentication/reauthenticate' => "devise/passkeys/controllers/test_reauthentication_controller_concern_setup/test_reauthentication#reauthenticate"
+      post "/reauthentication/new_challenge" => "devise/passkeys/controllers/test_reauthentication_controller_concern_setup/test_reauthentication#new_challenge"
+      post "/reauthentication/reauthenticate" => "devise/passkeys/controllers/test_reauthentication_controller_concern_setup/test_reauthentication#reauthenticate"
     end
   end
 
