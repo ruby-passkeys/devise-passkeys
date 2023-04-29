@@ -18,3 +18,6 @@ Layout/LineLength:
 Style/SignalException:
   Exclude:
     - 'lib/devise/passkeys/strategy.rb'
+
+Style/ClassAndModuleChildren:
+  Enabled: false
