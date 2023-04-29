@@ -17,7 +17,10 @@ jobs:
       - store_artifacts:
           path: coverage
   rubocop:
-    - checkout
+    docker:
+      - image: ruby:3.1.1
+    steps:
+      - checkout
       - run:
           name: Run the default task
           command: |
