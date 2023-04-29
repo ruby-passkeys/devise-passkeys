@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "webauthn/fake_client"
 
 module WebAuthnTestHelpers
@@ -37,7 +38,7 @@ module WebAuthnTestHelpers
     )
   end
 
-  def create_credential(client:, rp_id: nil, relying_party:)
+  def create_credential(client:, relying_party:, rp_id: nil)
     rp_id ||= relying_party.id || URI.parse(client.origin).host
 
     create_result = client.create(rp_id: rp_id)

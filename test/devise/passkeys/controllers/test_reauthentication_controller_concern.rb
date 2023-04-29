@@ -25,7 +25,7 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
     end
 
     def root_path
-     "/home"
+      "/home"
     end
   end
 
@@ -49,13 +49,13 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
     user = User.create!(email: "test@test.com")
 
     3.times do |n|
-      user.passkeys.create!(label: "#{n}", external_id: "dummy-passkey-#{n}", public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
+      user.passkeys.create!(label: n.to_s, external_id: "dummy-passkey-#{n}",
+                            public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
     end
 
     allowed_passkey_ids = user.passkeys.pluck(:external_id).map do |id|
       { "type" => "public-key", "id" => id }
     end
-
 
     sign_in(user)
     post "/reauthentication/new_challenge"
@@ -88,7 +88,8 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     assert_equal JSON.parse(response.body)["challenge"], session["user_current_reauthentication_challenge"]
 
-    assertion = assertion_from_client(client: client, challenge: JSON.parse(response.body)["challenge"], user_verified: true)
+    assertion = assertion_from_client(client: client, challenge: JSON.parse(response.body)["challenge"],
+                                      user_verified: true)
 
     post "/reauthentication/reauthenticate", params: { passkey_credential: assertion.to_json }, as: :json
 
@@ -117,13 +118,15 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     assert_equal JSON.parse(response.body)["challenge"], session["user_current_reauthentication_challenge"]
 
-    assertion = assertion_from_client(client: client, challenge: JSON.parse(response.body)["challenge"], user_verified: false)
+    assertion = assertion_from_client(client: client, challenge: JSON.parse(response.body)["challenge"],
+                                      user_verified: false)
 
     post "/reauthentication/reauthenticate", params: { passkey_credential: assertion.to_json }, as: :json
 
     response_json = JSON.parse(response.body)
 
-    assert_equal ({ "error"=>"translation missing: en.devise.failure.user.webauthn_user_verified_verification_error" }), response.parsed_body
+    assert_equal ({ "error" => "translation missing: en.devise.failure.user.webauthn_user_verified_verification_error" }),
+                 response.parsed_body
     assert_nil session["user_current_reauthentication_challenge"]
     assert_response :unauthorized
   end
@@ -153,7 +156,8 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     response_json = JSON.parse(response.body)
 
-    assert_equal ({ "error"=>"translation missing: en.devise.failure.user.webauthn_challenge_verification_error" }), response.parsed_body
+    assert_equal ({ "error" => "translation missing: en.devise.failure.user.webauthn_challenge_verification_error" }),
+                 response.parsed_body
     assert_nil session["user_current_reauthentication_challenge"]
     assert_response :unauthorized
   end
@@ -185,7 +189,8 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     response_json = JSON.parse(response.body)
 
-    assert_equal ({ "error"=>"translation missing: en.devise.failure.user.stored_credential_not_found" }), response.parsed_body
+    assert_equal ({ "error" => "translation missing: en.devise.failure.user.stored_credential_not_found" }),
+                 response.parsed_body
     assert_nil session["user_current_reauthentication_challenge"]
     assert_response :unauthorized
   end
@@ -217,7 +222,7 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     response_json = JSON.parse(response.body)
 
-    assert_equal ({ "error"=>"You need to sign in or sign up before continuing." }), response.parsed_body
+    assert_equal ({ "error" => "You need to sign in or sign up before continuing." }), response.parsed_body
     assert_nil session["user_current_reauthentication_challenge"]
     assert_response :unauthorized
   end
@@ -249,7 +254,7 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     response_json = JSON.parse(response.body)
 
-    assert_equal ({ "error"=>"You need to sign in or sign up before continuing." }), response.parsed_body
+    assert_equal ({ "error" => "You need to sign in or sign up before continuing." }), response.parsed_body
     assert_nil session["user_current_reauthentication_challenge"]
     assert_response :unauthorized
   end
@@ -272,7 +277,8 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     assert_equal JSON.parse(response.body)["challenge"], session["user_current_reauthentication_challenge"]
 
-    assertion = assertion_from_client(client: client, challenge: JSON.parse(response.body)["challenge"], user_verified: true)
+    assertion = assertion_from_client(client: client, challenge: JSON.parse(response.body)["challenge"],
+                                      user_verified: true)
 
     sign_out(user)
 
@@ -281,7 +287,6 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
     assert_response :unauthorized
   end
 end
-
 
 class Devise::Passkeys::Controllers::TestReauthenticationControllerConcernSetup < ActionDispatch::IntegrationTest
   include WebAuthnTestHelpers
@@ -297,7 +302,7 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcernSetup 
     end
 
     def root_path
-     "/home"
+      "/home"
     end
   end
 

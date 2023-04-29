@@ -14,11 +14,11 @@ module Devise
           include Warden::WebAuthn::StrategyHelpers
 
           prepend_before_action :authenticate_scope!
-          before_action :ensure_at_least_one_passkey, only: [:new_destroy_challenge, :destroy]
-          before_action :find_passkey, only: [:new_destroy_challenge, :destroy]
+          before_action :ensure_at_least_one_passkey, only: %i[new_destroy_challenge destroy]
+          before_action :find_passkey, only: %i[new_destroy_challenge destroy]
 
           before_action :verify_passkey_challenge, only: [:create]
-          before_action :verify_reauthentication_token, only: [:create, :destroy]
+          before_action :verify_reauthentication_token, only: %i[create destroy]
 
           # Authenticates the current scope and gets the current resource from the session.
           def authenticate_scope!
@@ -43,7 +43,7 @@ module Devise
           options_for_registration = generate_registration_options(
             relying_party: relying_party,
             user_details: user_details_for_registration,
-            exclude: exclude_external_ids_for_registration,
+            exclude: exclude_external_ids_for_registration
           )
 
           store_challenge_in_session(options_for_registration: options_for_registration)
@@ -58,7 +58,8 @@ module Devise
         def new_destroy_challenge
           allowed_passkeys = (resource.passkeys - [@passkey])
 
-          options_for_authentication = generate_authentication_options(relying_party: relying_party, options: { allow: allowed_passkeys.pluck(:external_id) })
+          options_for_authentication = generate_authentication_options(relying_party: relying_party,
+                                                                       options: { allow: allowed_passkeys.pluck(:external_id) })
 
           store_reauthentication_challenge_in_session(options_for_authentication: options_for_authentication)
 
@@ -111,21 +112,21 @@ module Devise
         end
 
         def ensure_at_least_one_passkey
-          if current_user.passkeys.count <= 1
-            render json: { error: find_message(:must_be_at_least_one_passkey) }, status: :bad_request
-          end
+          return unless current_user.passkeys.count <= 1
+
+          render json: { error: find_message(:must_be_at_least_one_passkey) }, status: :bad_request
         end
 
         def find_passkey
           @passkey = resource.passkeys.where(id: params[:id]).first
-          if @passkey.nil?
-            head :not_found
-            nil
-          end
+          return unless @passkey.nil?
+
+          head :not_found
+          nil
         end
 
         def verify_reauthentication_token
-          if !valid_reauthentication_token?(given_reauthentication_token: reauthentication_params[:reauthentication_token])
+          unless valid_reauthentication_token?(given_reauthentication_token: reauthentication_params[:reauthentication_token])
             render json: { error: find_message(:not_reauthenticated) }, status: :bad_request
           end
         end

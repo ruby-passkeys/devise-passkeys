@@ -30,7 +30,7 @@ module Devise
         protected
 
         def set_relying_party_in_request_env
-          raise RuntimeError, "need to define relying_party for this SessionsController"
+          raise "need to define relying_party for this SessionsController"
         end
       end
     end

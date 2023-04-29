@@ -28,7 +28,8 @@ module Devise
         end
 
         def new_challenge
-          options_for_authentication = generate_authentication_options(relying_party: relying_party, options: { allow: resource.passkeys.pluck(:external_id) })
+          options_for_authentication = generate_authentication_options(relying_party: relying_party,
+                                                                       options: { allow: resource.passkeys.pluck(:external_id) })
 
           store_reauthentication_challenge_in_session(options_for_authentication: options_for_authentication)
 
@@ -51,9 +52,9 @@ module Devise
         protected
 
         def prepare_params
-          request.params[resource_name] =  ActionController::Parameters.new({
-            passkey_credential: params[:passkey_credential]
-          })
+          request.params[resource_name] = ActionController::Parameters.new({
+                                                                             passkey_credential: params[:passkey_credential]
+                                                                           })
         end
 
         def strategy
@@ -69,9 +70,8 @@ module Devise
         end
 
         def set_relying_party_in_request_env
-          raise RuntimeError, "need to define relying_party for this SessionsController"
+          raise "need to define relying_party for this SessionsController"
         end
-
       end
     end
   end

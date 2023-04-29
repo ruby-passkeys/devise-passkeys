@@ -84,7 +84,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
     assert_equal 120_000, response_json["timeout"]
     assert_equal ({}), response_json["extensions"]
     assert_equal excluded_credentials, response_json["excludeCredentials"]
-    assert_equal ({ "userVerification"=>"required" }), response_json["authenticatorSelection"]
+    assert_equal ({ "userVerification" => "required" }), response_json["authenticatorSelection"]
   end
 
   test "#create: creates a passkey for the user" do
@@ -95,7 +95,8 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
     user = User.create!(email: "test@test.com")
 
     3.times do |n|
-      user.passkeys.create!(label: "#{n}", external_id: "dummy-passkey-#{n}", public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
+      user.passkeys.create!(label: n.to_s, external_id: "dummy-passkey-#{n}",
+                            public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
     end
 
     excluded_credentials = user.passkeys.pluck(:external_id).map do |id|
@@ -116,7 +117,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
     assert_equal 120_000, response_json["timeout"]
     assert_equal ({}), response_json["extensions"]
     assert_equal excluded_credentials, response_json["excludeCredentials"]
-    assert_equal ({ "userVerification"=>"required" }), response_json["authenticatorSelection"]
+    assert_equal ({ "userVerification" => "required" }), response_json["authenticatorSelection"]
 
     raw_credential = client.create(challenge: response_json["challenge"], user_verified: true)
 
@@ -141,11 +142,12 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
     )
 
     assert_no_difference "User.count" do
-    assert_difference "user.passkeys.count", +1 do
-      post "/passkey/create", params: { passkey: { label: "Test", credential: raw_credential.to_json, reauthentication_token: token } }
+      assert_difference "user.passkeys.count", +1 do
+        post "/passkey/create",
+             params: { passkey: { label: "Test", credential: raw_credential.to_json, reauthentication_token: token } }
 
-      assert_redirected_to "http://www.example.com/"
-    end
+        assert_redirected_to "http://www.example.com/"
+      end
     end
 
     passkey = user.passkeys.last
@@ -167,7 +169,8 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
     user = User.create!(email: "test@test.com")
 
     3.times do |n|
-      user.passkeys.create!(label: "#{n}", external_id: "dummy-passkey-#{n}", public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
+      user.passkeys.create!(label: n.to_s, external_id: "dummy-passkey-#{n}",
+                            public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
     end
 
     excluded_credentials = user.passkeys.pluck(:external_id).map do |id|
@@ -188,17 +191,19 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
     assert_equal 120_000, response_json["timeout"]
     assert_equal ({}), response_json["extensions"]
     assert_equal excluded_credentials, response_json["excludeCredentials"]
-    assert_equal ({ "userVerification"=>"required" }), response_json["authenticatorSelection"]
+    assert_equal ({ "userVerification" => "required" }), response_json["authenticatorSelection"]
 
     raw_credential = client.create(challenge: response_json["challenge"], user_verified: false)
 
     assert_no_difference "User.count" do
-    assert_no_difference "user.passkeys.count" do
-      post "/passkey/create", params: { passkey: { label: "Test", credential: raw_credential.to_json, reauthentication_token: token } }
+      assert_no_difference "user.passkeys.count" do
+        post "/passkey/create",
+             params: { passkey: { label: "Test", credential: raw_credential.to_json, reauthentication_token: token } }
 
-      assert_response :bad_request
-      assert_equal ({ "message" => "translation missing: en.devise.test_passkey.user.webauthn_user_verified_verification_error" }), response.parsed_body
-    end
+        assert_response :bad_request
+        assert_equal ({ "message" => "translation missing: en.devise.test_passkey.user.webauthn_user_verified_verification_error" }),
+                     response.parsed_body
+      end
     end
 
     assert_nil session["user_passkey_creation_challenge"]
@@ -213,7 +218,8 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
     user = User.create!(email: "test@test.com")
 
     3.times do |n|
-      user.passkeys.create!(label: "#{n}", external_id: "dummy-passkey-#{n}", public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
+      user.passkeys.create!(label: n.to_s, external_id: "dummy-passkey-#{n}",
+                            public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
     end
 
     excluded_credentials = user.passkeys.pluck(:external_id).map do |id|
@@ -234,17 +240,19 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
     assert_equal 120_000, response_json["timeout"]
     assert_equal ({}), response_json["extensions"]
     assert_equal excluded_credentials, response_json["excludeCredentials"]
-    assert_equal ({ "userVerification"=>"required" }), response_json["authenticatorSelection"]
+    assert_equal ({ "userVerification" => "required" }), response_json["authenticatorSelection"]
 
     raw_credential = client.create(challenge: "blah", user_verified: true)
 
     assert_no_difference "User.count" do
-    assert_no_difference "user.passkeys.count" do
-      post "/passkey/create", params: { passkey: { label: "Test", credential: raw_credential.to_json, reauthentication_token: token } }
+      assert_no_difference "user.passkeys.count" do
+        post "/passkey/create",
+             params: { passkey: { label: "Test", credential: raw_credential.to_json, reauthentication_token: token } }
 
-      assert_response :bad_request
-      assert_equal ({ "message" => "translation missing: en.devise.test_passkey.user.webauthn_challenge_verification_error" }), response.parsed_body
-    end
+        assert_response :bad_request
+        assert_equal ({ "message" => "translation missing: en.devise.test_passkey.user.webauthn_challenge_verification_error" }),
+                     response.parsed_body
+      end
     end
 
     assert_nil session["user_passkey_creation_challenge"]
@@ -259,7 +267,8 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
     user = User.create!(email: "test@test.com")
 
     3.times do |n|
-      user.passkeys.create!(label: "#{n}", external_id: "dummy-passkey-#{n}", public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
+      user.passkeys.create!(label: n.to_s, external_id: "dummy-passkey-#{n}",
+                            public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
     end
 
     excluded_credentials = user.passkeys.pluck(:external_id).map do |id|
@@ -277,12 +286,14 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
     response_json = JSON.parse(response.body)
 
     assert_no_difference "User.count" do
-    assert_no_difference "user.passkeys.count" do
-      post "/passkey/create", params: { passkey: { label: "Test", credential: "blahj", reauthentication_token: token } }
+      assert_no_difference "user.passkeys.count" do
+        post "/passkey/create",
+             params: { passkey: { label: "Test", credential: "blahj", reauthentication_token: token } }
 
-      assert_response :bad_request
-      assert_equal ({ "message" => "translation missing: en.devise.test_passkey.user.credential_missing_or_could_not_be_parsed" }), response.parsed_body
-    end
+        assert_response :bad_request
+        assert_equal ({ "message" => "translation missing: en.devise.test_passkey.user.credential_missing_or_could_not_be_parsed" }),
+                     response.parsed_body
+      end
     end
 
     assert_nil session["user_passkey_creation_challenge"]
@@ -297,7 +308,8 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
     user = User.create!(email: "test@test.com")
 
     3.times do |n|
-      user.passkeys.create!(label: "#{n}", external_id: "dummy-passkey-#{n}", public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
+      user.passkeys.create!(label: n.to_s, external_id: "dummy-passkey-#{n}",
+                            public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
     end
 
     excluded_credentials = user.passkeys.pluck(:external_id).map do |id|
@@ -315,12 +327,13 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
     response_json = JSON.parse(response.body)
 
     assert_no_difference "User.count" do
-    assert_no_difference "user.passkeys.count" do
-      post "/passkey/create", params: { passkey: { label: "Test", reauthentication_token: token } }
+      assert_no_difference "user.passkeys.count" do
+        post "/passkey/create", params: { passkey: { label: "Test", reauthentication_token: token } }
 
-      assert_response :bad_request
-      assert_equal ({ "message" => "translation missing: en.devise.test_passkey.user.credential_missing_or_could_not_be_parsed" }), response.parsed_body
-    end
+        assert_response :bad_request
+        assert_equal ({ "message" => "translation missing: en.devise.test_passkey.user.credential_missing_or_could_not_be_parsed" }),
+                     response.parsed_body
+      end
     end
 
     assert_nil session["user_passkey_creation_challenge"]
@@ -335,7 +348,8 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
     user = User.create!(email: "test@test.com")
 
     3.times do |n|
-      user.passkeys.create!(label: "#{n}", external_id: "dummy-passkey-#{n}", public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
+      user.passkeys.create!(label: n.to_s, external_id: "dummy-passkey-#{n}",
+                            public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
     end
 
     excluded_credentials = user.passkeys.pluck(:external_id).map do |id|
@@ -352,17 +366,19 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
     assert_equal 120_000, response_json["timeout"]
     assert_equal ({}), response_json["extensions"]
     assert_equal excluded_credentials, response_json["excludeCredentials"]
-    assert_equal ({ "userVerification"=>"required" }), response_json["authenticatorSelection"]
+    assert_equal ({ "userVerification" => "required" }), response_json["authenticatorSelection"]
 
     raw_credential = client.create(challenge: response_json["challenge"], user_verified: true)
 
     assert_no_difference "User.count" do
-    assert_no_difference "user.passkeys.count" do
-      post "/passkey/create", params: { passkey: { label: "Test", credential: raw_credential.to_json, reauthentication_token: :blah } }
+      assert_no_difference "user.passkeys.count" do
+        post "/passkey/create",
+             params: { passkey: { label: "Test", credential: raw_credential.to_json, reauthentication_token: :blah } }
 
-      assert_response :bad_request
-      assert_equal ({ "error" => "translation missing: en.devise.test_passkey.user.not_reauthenticated" }), response.parsed_body
-    end
+        assert_response :bad_request
+        assert_equal ({ "error" => "translation missing: en.devise.test_passkey.user.not_reauthenticated" }),
+                     response.parsed_body
+      end
     end
   end
 
@@ -374,7 +390,8 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
     user = User.create!(email: "test@test.com")
 
     3.times do |n|
-      user.passkeys.create!(label: "#{n}", external_id: "dummy-passkey-#{n}", public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
+      user.passkeys.create!(label: n.to_s, external_id: "dummy-passkey-#{n}",
+                            public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
     end
 
     excluded_credentials = user.passkeys.pluck(:external_id).map do |id|
@@ -395,22 +412,22 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
     assert_equal 120_000, response_json["timeout"]
     assert_equal ({}), response_json["extensions"]
     assert_equal excluded_credentials, response_json["excludeCredentials"]
-    assert_equal ({ "userVerification"=>"required" }), response_json["authenticatorSelection"]
+    assert_equal ({ "userVerification" => "required" }), response_json["authenticatorSelection"]
 
     raw_credential = client.create(challenge: response_json["challenge"], user_verified: true)
 
     assert_no_difference "User.count" do
-    assert_no_difference "user.passkeys.count" do
-    assert_raises ActiveRecord::RecordInvalid do
-      post "/passkey/create", params: { passkey: { label: "", credential: raw_credential.to_json, reauthentication_token: token } }
-    end
-    end
+      assert_no_difference "user.passkeys.count" do
+        assert_raises ActiveRecord::RecordInvalid do
+          post "/passkey/create",
+               params: { passkey: { label: "", credential: raw_credential.to_json, reauthentication_token: token } }
+        end
+      end
     end
 
     refute_nil session["user_passkey_creation_challenge"]
     refute_nil session["user_current_reauthentication_token"]
   end
-
 
   test "#new_destroy_challenge: not signed in" do
     post "/passkey/1234/new_destroy_challenge"
@@ -436,7 +453,8 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
 
     post "/passkey/#{passkey.id}/new_destroy_challenge"
     assert_response :bad_request
-    assert_equal ({ "error" => "translation missing: en.devise.test_passkey.user.must_be_at_least_one_passkey" }), response.parsed_body
+    assert_equal ({ "error" => "translation missing: en.devise.test_passkey.user.must_be_at_least_one_passkey" }),
+                 response.parsed_body
   end
 
   test "#new_destroy_challenge: other user passkey" do
@@ -447,9 +465,9 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
     user = User.create!(email: "test@test.com")
 
     3.times do |n|
-      user.passkeys.create!(label: "#{n}", external_id: "dummy-passkey-#{n}", public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
+      user.passkeys.create!(label: n.to_s, external_id: "dummy-passkey-#{n}",
+                            public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
     end
-
 
     other_user = User.create!(email: "example@example.com")
 
@@ -474,7 +492,8 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
 
     user = User.create!(email: "test@test.com")
 
-    old_passkey =  user.passkeys.create!(label: "OLD", external_id: "dummy-passkey", public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
+    old_passkey = user.passkeys.create!(label: "OLD", external_id: "dummy-passkey",
+                                        public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
 
     passkey = user.passkeys.create!(
       label: "dummy",
@@ -528,7 +547,8 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
       delete "/passkey/#{passkey.id}"
     end
     assert_response :bad_request
-    assert_equal ({ "error" => "translation missing: en.devise.test_passkey.user.must_be_at_least_one_passkey" }), response.parsed_body
+    assert_equal ({ "error" => "translation missing: en.devise.test_passkey.user.must_be_at_least_one_passkey" }),
+                 response.parsed_body
   end
 
   test "#destroy: other user passkey" do
@@ -539,9 +559,9 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
     user = User.create!(email: "test@test.com")
 
     3.times do |n|
-      user.passkeys.create!(label: "#{n}", external_id: "dummy-passkey-#{n}", public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
+      user.passkeys.create!(label: n.to_s, external_id: "dummy-passkey-#{n}",
+                            public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
     end
-
 
     other_user = User.create!(email: "example@example.com")
 
@@ -568,7 +588,8 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
 
     user = User.create!(email: "test@test.com")
 
-    old_passkey =  user.passkeys.create!(label: "OLD", external_id: "dummy-passkey", public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
+    old_passkey = user.passkeys.create!(label: "OLD", external_id: "dummy-passkey",
+                                        public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
 
     passkey = user.passkeys.create!(
       label: "dummy",
@@ -600,7 +621,8 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
 
     user = User.create!(email: "test@test.com")
 
-    old_passkey =  user.passkeys.create!(label: "OLD", external_id: "dummy-passkey", public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
+    old_passkey = user.passkeys.create!(label: "OLD", external_id: "dummy-passkey",
+                                        public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
 
     passkey = user.passkeys.create!(
       label: "dummy",
@@ -616,7 +638,8 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
       delete "/passkey/#{passkey.id}", params: { passkey: { reauthentication_token: "blah" } }
 
       assert_response :bad_request
-      assert_equal ({ "error" => "translation missing: en.devise.test_passkey.user.not_reauthenticated" }), response.parsed_body
+      assert_equal ({ "error" => "translation missing: en.devise.test_passkey.user.not_reauthenticated" }),
+                   response.parsed_body
     end
 
     assert_equal passkey, UserPasskey.find_by(id: passkey.id)
@@ -629,7 +652,8 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
 
     user = User.create!(email: "test@test.com")
 
-    old_passkey =  user.passkeys.create!(label: "OLD", external_id: "dummy-passkey", public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
+    old_passkey = user.passkeys.create!(label: "OLD", external_id: "dummy-passkey",
+                                        public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
 
     passkey = user.passkeys.create!(
       label: "dummy",
@@ -649,7 +673,8 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
       delete "/passkey/#{passkey.id}", params: { passkey: { value: "blah" } }
 
       assert_response :bad_request
-      assert_equal ({ "error" => "translation missing: en.devise.test_passkey.user.not_reauthenticated" }), response.parsed_body
+      assert_equal ({ "error" => "translation missing: en.devise.test_passkey.user.not_reauthenticated" }),
+                   response.parsed_body
     end
 
     assert_equal passkey, UserPasskey.find_by(id: passkey.id)
@@ -662,7 +687,8 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
 
     user = User.create!(email: "test@test.com")
 
-    old_passkey =  user.passkeys.create!(label: "OLD", external_id: "dummy-passkey", public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
+    old_passkey = user.passkeys.create!(label: "OLD", external_id: "dummy-passkey",
+                                        public_key: Base64.strict_encode64(SecureRandom.random_bytes(10)))
 
     passkey = user.passkeys.create!(
       label: "dummy",
@@ -682,7 +708,8 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
       delete "/passkey/#{passkey.id}", params: { passkey: { reauthentication_token: "asdasdsadasd" } }
 
       assert_response :bad_request
-      assert_equal ({ "error" => "translation missing: en.devise.test_passkey.user.not_reauthenticated" }), response.parsed_body
+      assert_equal ({ "error" => "translation missing: en.devise.test_passkey.user.not_reauthenticated" }),
+                   response.parsed_body
     end
 
     assert_equal passkey, UserPasskey.find_by(id: passkey.id)

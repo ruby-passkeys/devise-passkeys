@@ -16,7 +16,8 @@ class Devise::TestPasskeys < ActiveSupport::TestCase
     client = fake_client(origin: relying_party.origin)
     credential = create_raw_credential(credential_hash: client.create, relying_party: relying_party)
 
-    passkey = Devise::Passkeys.create_and_return_passkey(resource: user, label: "Test Key", webauthn_credential: credential)
+    passkey = Devise::Passkeys.create_and_return_passkey(resource: user, label: "Test Key",
+                                                         webauthn_credential: credential)
     assert_equal true, passkey.persisted?
 
     UserPasskey.find(passkey.id)

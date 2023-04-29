@@ -11,11 +11,11 @@ module Devise
           include Warden::WebAuthn::RegistrationHelpers
 
           before_action :require_no_authentication, only: [:new_challenge]
-          before_action :require_email_and_passkey_label, only: [:new_challenge, :create]
+          before_action :require_email_and_passkey_label, only: %i[new_challenge create]
           before_action :verify_passkey_registration_challenge, only: [:create]
           before_action :configure_sign_up_params, only: [:create]
 
-          before_action :verify_reauthentication_token, only: [:update, :destroy]
+          before_action :verify_reauthentication_token, only: %i[update destroy]
 
           def registration_user_id_key
             "#{resource_name}_current_webauthn_user_id"
@@ -34,7 +34,7 @@ module Devise
           options_for_registration = generate_registration_options(
             relying_party: relying_party,
             user_details: user_details_for_registration,
-            exclude: exclude_external_ids_for_registration,
+            exclude: exclude_external_ids_for_registration
           )
 
           store_challenge_in_session(options_for_registration: options_for_registration)
@@ -51,12 +51,12 @@ module Devise
         protected
 
         def create_resource_and_passkey(resource:)
-          if resource.persisted?
-            passkey = create_passkey(resource: resource)
+          return unless resource.persisted?
 
-            yield [resource, passkey] if block_given?
-            delete_registration_user_id!
-          end
+          passkey = create_passkey(resource: resource)
+
+          yield [resource, passkey] if block_given?
+          delete_registration_user_id!
         end
 
         def create_passkey(resource:)
@@ -70,7 +70,7 @@ module Devise
         end
 
         def verify_reauthentication_token
-          if !valid_reauthentication_token?(given_reauthentication_token: reauthentication_params[:reauthentication_token])
+          unless valid_reauthentication_token?(given_reauthentication_token: reauthentication_params[:reauthentication_token])
             render json: { error: find_message(:not_reauthenticated) }, status: :bad_request
           end
         end
@@ -107,12 +107,10 @@ module Devise
         end
 
         def verify_passkey_registration_challenge
-          begin
-            @webauthn_credential = verify_registration(relying_party: relying_party)
-          rescue ::WebAuthn::Error => e
-            error_key = Warden::WebAuthn::ErrorKeyFinder.webauthn_error_key(exception: e)
-            render json: { message: find_message(error_key) }, status: :bad_request
-          end
+          @webauthn_credential = verify_registration(relying_party: relying_party)
+        rescue ::WebAuthn::Error => e
+          error_key = Warden::WebAuthn::ErrorKeyFinder.webauthn_error_key(exception: e)
+          render json: { message: find_message(error_key) }, status: :bad_request
         end
 
         # If you have extra params to permit, append them to the sanitizer.

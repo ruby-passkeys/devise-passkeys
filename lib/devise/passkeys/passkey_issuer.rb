@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Devise
   module Passkeys
     class PasskeyIssuer
@@ -17,7 +18,6 @@ module Devise
           last_used_at: nil
         }.merge(extra_attributes))
       end
-
 
       class CredentialFinder
         attr_reader :resource_class

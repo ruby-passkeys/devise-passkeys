@@ -12,11 +12,11 @@ group :development, :test do
 end
 
 group :test do
-  gem "m"
-  gem "minitest", "~> 5.0"
-  gem "rack"
-  gem "simplecov"
   gem "database_cleaner-active_record"
   gem "database_cleaner-mongoid"
+  gem "m"
+  gem "minitest", "~> 5.0"
   gem "minitest-ci", require: false
+  gem "rack"
+  gem "simplecov"
 end

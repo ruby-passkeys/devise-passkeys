@@ -32,7 +32,8 @@ class Devise::Passkeys::Controllers::Concerns::TestReauthenticationChallenge < A
   end
 
   test "#passkey_reauthentication_challenge_session_key" do
-    assert_equal "test_value:1234_current_reauthentication_challenge", @test_class.passkey_reauthentication_challenge_session_key
+    assert_equal "test_value:1234_current_reauthentication_challenge",
+                 @test_class.passkey_reauthentication_challenge_session_key
   end
 end
 
