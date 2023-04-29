@@ -16,3 +16,10 @@ jobs:
           path: test/reports
       - store_artifacts:
           path: coverage
+  rubocop:
+    - checkout
+      - run:
+          name: Run the default task
+          command: |
+            gem install bundler -v 2.3.7
+            bundle rubocop
