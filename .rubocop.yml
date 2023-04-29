@@ -1,7 +1,7 @@
 AllCops:
   TargetRubyVersion: 2.6
   Exclude:
-    - 'test/rails_app/**/*'
+    - 'test/rails_app/**/*.rb'
 
 Style/StringLiterals:
   Enabled: true
