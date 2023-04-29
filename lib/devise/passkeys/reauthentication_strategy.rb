@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "devise/strategies/authenticatable"
 require_relative "passkey_issuer"
 
