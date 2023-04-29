@@ -52,7 +52,7 @@ module Devise
         end
 
         def create
-          create_passkey(resource:)
+          create_passkey(resource: resource)
         end
 
         def new_destroy_challenge
