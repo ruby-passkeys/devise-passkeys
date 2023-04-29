@@ -126,9 +126,9 @@ module Devise
         end
 
         def verify_reauthentication_token
-          unless valid_reauthentication_token?(given_reauthentication_token: reauthentication_params[:reauthentication_token])
-            render json: { error: find_message(:not_reauthenticated) }, status: :bad_request
-          end
+          return if valid_reauthentication_token?(given_reauthentication_token: reauthentication_params[:reauthentication_token])
+
+          render json: { error: find_message(:not_reauthenticated) }, status: :bad_request
         end
 
         def reauthentication_params
