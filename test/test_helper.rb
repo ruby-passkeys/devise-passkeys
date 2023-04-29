@@ -16,3 +16,8 @@ $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
 require "devise/passkeys"
 
 require "minitest/autorun"
+
+if ENV["CIRCLECI"]
+  require 'minitest/ci'
+  Minitest::Ci.report_dir = "#{Minitest::Ci.report_dir}/#{Rails.version}"
+end

@@ -16,3 +16,4 @@ rdoc/*
 pkg
 log
 test/tmp/*
+test/reports
