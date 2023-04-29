@@ -26,3 +26,9 @@ jobs:
           command: |
             gem install bundler -v 2.3.7
             bundle rubocop
+
+workflows:
+  build:
+    jobs:
+      - build
+      - rubocop
