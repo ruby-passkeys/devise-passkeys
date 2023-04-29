@@ -12,3 +12,5 @@ jobs:
             bundle install
             bundle exec appraisal
             bundle exec appraisal rake test
+      - store_test_results:
+          path: test/reports
