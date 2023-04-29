@@ -6,6 +6,7 @@ source "https://rubygems.org"
 gemspec
 
 group :development, :test do
+  gem "appraisal"
   gem "debug"
   gem "rake", "~> 13.0"
   gem "rubocop", "~> 1.21"

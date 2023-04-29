@@ -6,6 +6,7 @@ gem "rails", "~> 7"
 gem "sqlite3"
 
 group :development, :test do
+  gem "appraisal"
   gem "debug"
   gem "rake", "~> 13.0"
   gem "rubocop", "~> 1.21"
