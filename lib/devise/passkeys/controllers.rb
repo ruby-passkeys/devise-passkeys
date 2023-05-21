@@ -9,6 +9,7 @@ require_relative "controllers/passkeys_controller_concern"
 
 module Devise
   module Passkeys
+    # All Passkeys controllers are inherited from here.
     module Controllers
     end
   end

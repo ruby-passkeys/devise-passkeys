@@ -4,6 +4,7 @@ module Devise
   module Passkeys
     module Controllers
       module Concerns
+        # PasskeyReauthentication concern.
         module PasskeyReauthentication
           extend ActiveSupport::Concern
 

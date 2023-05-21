@@ -5,6 +5,7 @@ require_relative "passkey_issuer"
 
 module Devise
   module Strategies
+    # PasskeyReauthentication strategy.
     class PasskeyReauthentication < PasskeyAuthenticatable
       def authentication_challenge_key
         "#{mapping.singular}_current_reauthentication_challenge"

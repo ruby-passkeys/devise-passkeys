@@ -3,6 +3,7 @@
 module Devise
   module Passkeys
     module Controllers
+      # Passkeys RegistrationsController concern.
       module RegistrationsControllerConcern
         extend ActiveSupport::Concern
 

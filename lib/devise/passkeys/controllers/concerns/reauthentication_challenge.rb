@@ -4,6 +4,7 @@ module Devise
   module Passkeys
     module Controllers
       module Concerns
+        # Passkeys ReauthenticationChallenge concern.
         module ReauthenticationChallenge
           extend ActiveSupport::Concern
 

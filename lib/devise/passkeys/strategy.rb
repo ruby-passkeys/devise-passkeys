@@ -5,6 +5,7 @@ require_relative "passkey_issuer"
 
 module Devise
   module Strategies
+    # PasskeyAuthenticable strategy.
     class PasskeyAuthenticatable < Authenticatable
       include Warden::WebAuthn::StrategyHelpers
 

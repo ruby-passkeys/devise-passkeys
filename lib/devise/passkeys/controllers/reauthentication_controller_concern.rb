@@ -3,6 +3,7 @@
 module Devise
   module Passkeys
     module Controllers
+      # Passkeys ReauthenticationController concern.
       module ReauthenticationControllerConcern
         extend ActiveSupport::Concern
 

@@ -2,6 +2,7 @@
 
 module Devise
   module Passkeys
+    # PasskeyIssuer class.
     class PasskeyIssuer
       def self.build
         new
@@ -21,6 +22,7 @@ module Devise
         }.merge(extra_attributes))
       end
 
+      # CredentialFinder class.
       class CredentialFinder
         attr_reader :resource_class
 

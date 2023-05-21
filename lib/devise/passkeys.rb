@@ -11,6 +11,7 @@ require_relative "passkeys/reauthentication_strategy"
 require_relative "passkeys/version"
 
 module Devise
+  # All Passkeys sub-modules, models, classes, concerns etc are inherited from here.
   module Passkeys
     def self.create_and_return_passkey(resource:, label:, webauthn_credential:, extra_attributes: {})
       PasskeyIssuer.build.create_and_return_passkey(
