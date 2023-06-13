@@ -2,9 +2,11 @@
 
 require "test_helper"
 require_relative "../../../test_helper/webauthn_test_helpers"
+require_relative "../../../test_helper/extra_assertions"
 
 class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispatch::IntegrationTest
   include WebAuthnTestHelpers
+  include ExtraAssertions
   include Devise::Test::IntegrationHelpers
 
   class TestPasskeyController < DeviseController
@@ -201,8 +203,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
              params: { passkey: { label: "Test", credential: raw_credential.to_json, reauthentication_token: token } }
 
         assert_response :bad_request
-        assert_equal ({ "message" => "translation missing: en.devise.test_passkey.user.webauthn_user_verified_verification_error" }),
-                     response.parsed_body
+        assert_translation_missing_message(translation_key: "en.devise.test_passkey.user.webauthn_user_verified_verification_error")
       end
     end
 
@@ -250,8 +251,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
              params: { passkey: { label: "Test", credential: raw_credential.to_json, reauthentication_token: token } }
 
         assert_response :bad_request
-        assert_equal ({ "message" => "translation missing: en.devise.test_passkey.user.webauthn_challenge_verification_error" }),
-                     response.parsed_body
+        assert_translation_missing_message(translation_key: "en.devise.test_passkey.user.webauthn_challenge_verification_error")
       end
     end
 
@@ -291,8 +291,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
              params: { passkey: { label: "Test", credential: "blahj", reauthentication_token: token } }
 
         assert_response :bad_request
-        assert_equal ({ "message" => "translation missing: en.devise.test_passkey.user.credential_missing_or_could_not_be_parsed" }),
-                     response.parsed_body
+        assert_translation_missing_message(translation_key: "en.devise.test_passkey.user.credential_missing_or_could_not_be_parsed")
       end
     end
 
@@ -331,8 +330,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
         post "/passkey/create", params: { passkey: { label: "Test", reauthentication_token: token } }
 
         assert_response :bad_request
-        assert_equal ({ "message" => "translation missing: en.devise.test_passkey.user.credential_missing_or_could_not_be_parsed" }),
-                     response.parsed_body
+        assert_translation_missing_message(translation_key: "en.devise.test_passkey.user.credential_missing_or_could_not_be_parsed")
       end
     end
 
@@ -376,8 +374,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
              params: { passkey: { label: "Test", credential: raw_credential.to_json, reauthentication_token: :blah } }
 
         assert_response :bad_request
-        assert_equal ({ "error" => "translation missing: en.devise.test_passkey.user.not_reauthenticated" }),
-                     response.parsed_body
+        assert_translation_missing_error(translation_key: "en.devise.test_passkey.user.not_reauthenticated")
       end
     end
   end
@@ -453,8 +450,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
 
     post "/passkey/#{passkey.id}/new_destroy_challenge"
     assert_response :bad_request
-    assert_equal ({ "error" => "translation missing: en.devise.test_passkey.user.must_be_at_least_one_passkey" }),
-                 response.parsed_body
+    assert_translation_missing_error(translation_key: "en.devise.test_passkey.user.must_be_at_least_one_passkey")
   end
 
   test "#new_destroy_challenge: other user passkey" do
@@ -547,8 +543,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
       delete "/passkey/#{passkey.id}"
     end
     assert_response :bad_request
-    assert_equal ({ "error" => "translation missing: en.devise.test_passkey.user.must_be_at_least_one_passkey" }),
-                 response.parsed_body
+    assert_translation_missing_error(translation_key: "en.devise.test_passkey.user.must_be_at_least_one_passkey")
   end
 
   test "#destroy: other user passkey" do
@@ -638,8 +633,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
       delete "/passkey/#{passkey.id}", params: { passkey: { reauthentication_token: "blah" } }
 
       assert_response :bad_request
-      assert_equal ({ "error" => "translation missing: en.devise.test_passkey.user.not_reauthenticated" }),
-                   response.parsed_body
+      assert_translation_missing_error(translation_key: "en.devise.test_passkey.user.not_reauthenticated")
     end
 
     assert_equal passkey, UserPasskey.find_by(id: passkey.id)
@@ -673,8 +667,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
       delete "/passkey/#{passkey.id}", params: { passkey: { value: "blah" } }
 
       assert_response :bad_request
-      assert_equal ({ "error" => "translation missing: en.devise.test_passkey.user.not_reauthenticated" }),
-                   response.parsed_body
+      assert_translation_missing_error(translation_key: "en.devise.test_passkey.user.not_reauthenticated")
     end
 
     assert_equal passkey, UserPasskey.find_by(id: passkey.id)
@@ -708,8 +701,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
       delete "/passkey/#{passkey.id}", params: { passkey: { reauthentication_token: "asdasdsadasd" } }
 
       assert_response :bad_request
-      assert_equal ({ "error" => "translation missing: en.devise.test_passkey.user.not_reauthenticated" }),
-                   response.parsed_body
+      assert_translation_missing_error(translation_key: "en.devise.test_passkey.user.not_reauthenticated")
     end
 
     assert_equal passkey, UserPasskey.find_by(id: passkey.id)
