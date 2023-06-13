@@ -2,9 +2,11 @@
 
 require "test_helper"
 require_relative "../../../test_helper/webauthn_test_helpers"
+require_relative "../../../test_helper/extra_assertions"
 
 class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < ActionDispatch::IntegrationTest
   include WebAuthnTestHelpers
+  include ExtraAssertions
   include Devise::Test::IntegrationHelpers
 
   class TestRegistrationController < Devise::RegistrationsController
@@ -154,8 +156,7 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
                                passkey_credential: raw_credential.to_json } }
 
         assert_response :bad_request
-        assert_equal ({ "message" => "translation missing: en.devise.registrations.user.webauthn_user_verified_verification_error" }),
-                     response.parsed_body
+        assert_translation_missing_message(translation_key: "en.devise.registrations.user.webauthn_user_verified_verification_error")
       end
     end
   end
@@ -180,8 +181,7 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
                                passkey_credential: raw_credential.to_json } }
 
         assert_response :bad_request
-        assert_equal ({ "message" => "translation missing: en.devise.registrations.user.webauthn_challenge_verification_error" }),
-                     response.parsed_body
+        assert_translation_missing_message(translation_key: "en.devise.registrations.user.webauthn_challenge_verification_error")
       end
     end
   end
@@ -245,8 +245,7 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
         post "/registration", params: { user: { email: "test@test.com", passkey_credential: raw_credential.to_json } }
 
         assert_response :bad_request
-        assert_equal ({ "message" => "translation missing: en.devise.registrations.user.passkey_label_missing" }),
-                     response.parsed_body
+        assert_translation_missing_message(translation_key: "en.devise.registrations.user.passkey_label_missing")
       end
     end
   end
@@ -269,8 +268,7 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
         post "/registration", params: { user: { passkey_label: "Test", passkey_credential: raw_credential.to_json } }
 
         assert_response :bad_request
-        assert_equal ({ "message" => "translation missing: en.devise.registrations.user.email_missing" }),
-                     response.parsed_body
+        assert_translation_missing_message(translation_key: "en.devise.registrations.user.email_missing")
       end
     end
   end
@@ -324,8 +322,7 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
     end
 
     assert_response :bad_request
-    assert_equal ({ "error" => "translation missing: en.devise.registrations.user.not_reauthenticated" }),
-                 response.parsed_body
+    assert_translation_missing_error(translation_key: "en.devise.registrations.user.not_reauthenticated")
 
     assert_equal "test@test.com", user.reload.email
 
@@ -347,8 +344,7 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
     end
 
     assert_response :bad_request
-    assert_equal ({ "error" => "translation missing: en.devise.registrations.user.not_reauthenticated" }),
-                 response.parsed_body
+    assert_translation_missing_error(translation_key: "en.devise.registrations.user.not_reauthenticated")
 
     assert_equal "test@test.com", user.reload.email
 
@@ -370,8 +366,7 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
     end
 
     assert_response :bad_request
-    assert_equal ({ "error" => "translation missing: en.devise.registrations.user.not_reauthenticated" }),
-                 response.parsed_body
+    assert_translation_missing_error(translation_key: "en.devise.registrations.user.not_reauthenticated")
 
     assert_equal "test@test.com", user.reload.email
 
@@ -413,8 +408,7 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
     end
 
     assert_response :bad_request
-    assert_equal ({ "error" => "translation missing: en.devise.registrations.user.not_reauthenticated" }),
-                 response.parsed_body
+    assert_translation_missing_error(translation_key: "en.devise.registrations.user.not_reauthenticated")
 
     assert_equal "test@test.com", user.reload.email
 
@@ -436,8 +430,7 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
     end
 
     assert_response :bad_request
-    assert_equal ({ "error" => "translation missing: en.devise.registrations.user.not_reauthenticated" }),
-                 response.parsed_body
+    assert_translation_missing_error(translation_key: "en.devise.registrations.user.not_reauthenticated")
 
     assert_equal "test@test.com", user.reload.email
 
@@ -459,8 +452,7 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
     end
 
     assert_response :bad_request
-    assert_equal ({ "error" => "translation missing: en.devise.registrations.user.not_reauthenticated" }),
-                 response.parsed_body
+    assert_translation_missing_error(translation_key: "en.devise.registrations.user.not_reauthenticated")
 
     assert_equal "test@test.com", user.reload.email
 

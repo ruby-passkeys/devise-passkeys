@@ -2,9 +2,11 @@
 
 require "test_helper"
 require_relative "../../../test_helper/webauthn_test_helpers"
+require_relative "../../../test_helper/extra_assertions"
 
 class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < ActionDispatch::IntegrationTest
   include WebAuthnTestHelpers
+  include ExtraAssertions
   include Devise::Test::IntegrationHelpers
 
   class TestReauthenticationController < ActionController::Base
@@ -125,8 +127,7 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     response_json = JSON.parse(response.body)
 
-    assert_equal ({ "error" => "translation missing: en.devise.failure.user.webauthn_user_verified_verification_error" }),
-                 response.parsed_body
+    assert_translation_missing_error(translation_key: "en.devise.failure.user.webauthn_user_verified_verification_error")
     assert_nil session["user_current_reauthentication_challenge"]
     assert_response :unauthorized
   end
@@ -156,8 +157,7 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     response_json = JSON.parse(response.body)
 
-    assert_equal ({ "error" => "translation missing: en.devise.failure.user.webauthn_challenge_verification_error" }),
-                 response.parsed_body
+    assert_translation_missing_error(translation_key: "en.devise.failure.user.webauthn_challenge_verification_error")
     assert_nil session["user_current_reauthentication_challenge"]
     assert_response :unauthorized
   end
@@ -189,8 +189,7 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     response_json = JSON.parse(response.body)
 
-    assert_equal ({ "error" => "translation missing: en.devise.failure.user.stored_credential_not_found" }),
-                 response.parsed_body
+    assert_translation_missing_error(translation_key: "en.devise.failure.user.stored_credential_not_found")
     assert_nil session["user_current_reauthentication_challenge"]
     assert_response :unauthorized
   end
