@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "controllers/concerns/passkey_reauthentication"
+require_relative "controllers/concerns/Reauthentication"
 require_relative "controllers/concerns/reauthentication_challenge"
 require_relative "controllers/sessions_controller_concern"
 require_relative "controllers/registrations_controller_concern"

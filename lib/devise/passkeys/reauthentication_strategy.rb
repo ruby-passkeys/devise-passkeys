@@ -5,7 +5,7 @@ require_relative "passkey_issuer"
 
 module Devise
   module Strategies
-    class PasskeyReauthentication < PasskeyAuthenticatable
+    class Reauthentication < PasskeyAuthenticatable
       def authentication_challenge_key
         "#{mapping.singular}_current_reauthentication_challenge"
       end
@@ -13,4 +13,4 @@ module Devise
   end
 end
 
-Warden::Strategies.add(:passkey_reauthentication, Devise::Strategies::PasskeyReauthentication)
+Warden::Strategies.add(:Reauthentication, Devise::Strategies::Reauthentication)

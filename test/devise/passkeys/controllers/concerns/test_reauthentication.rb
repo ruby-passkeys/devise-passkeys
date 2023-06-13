@@ -2,9 +2,9 @@
 
 require "test_helper"
 
-class Devise::Passkeys::Controllers::Concerns::TestPasskeyReauthentication < ActiveSupport::TestCase
+class Devise::Passkeys::Controllers::Concerns::TestReauthentication < ActiveSupport::TestCase
   class TestClass
-    include Devise::Passkeys::Controllers::Concerns::PasskeyReauthentication
+    include Devise::Passkeys::Controllers::Concerns::Reauthentication
 
     attr_accessor :session
 
@@ -69,14 +69,14 @@ class Devise::Passkeys::Controllers::Concerns::TestPasskeyReauthentication < Act
     assert_nil @test_class.session["test_value:1234_current_reauthentication_token"]
   end
 
-  test "#passkey_reauthentication_token_key" do
-    assert_equal "test_value:1234_current_reauthentication_token", @test_class.passkey_reauthentication_token_key
+  test "#Reauthentication_token_key" do
+    assert_equal "test_value:1234_current_reauthentication_token", @test_class.Reauthentication_token_key
   end
 end
 
-class Devise::Passkeys::Controllers::Concerns::TestPasskeyReauthenticationCustomization < ActiveSupport::TestCase
+class Devise::Passkeys::Controllers::Concerns::TestReauthenticationCustomization < ActiveSupport::TestCase
   class TestClass
-    include Devise::Passkeys::Controllers::Concerns::PasskeyReauthentication
+    include Devise::Passkeys::Controllers::Concerns::Reauthentication
 
     attr_accessor :session
 
@@ -84,7 +84,7 @@ class Devise::Passkeys::Controllers::Concerns::TestPasskeyReauthenticationCustom
       self.session = {}
     end
 
-    def passkey_reauthentication_token_key
+    def Reauthentication_token_key
       "passkey_reauth"
     end
   end
@@ -141,7 +141,7 @@ class Devise::Passkeys::Controllers::Concerns::TestPasskeyReauthenticationCustom
     assert_nil @test_class.session["passkey_reauth"]
   end
 
-  test "#passkey_reauthentication_token_key" do
-    assert_equal "passkey_reauth", @test_class.passkey_reauthentication_token_key
+  test "#Reauthentication_token_key" do
+    assert_equal "passkey_reauth", @test_class.Reauthentication_token_key
   end
 end
