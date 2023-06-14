@@ -2,9 +2,9 @@
 
 require "test_helper"
 
-class Devise::Passkeys::Controllers::Concerns::TestPasskeyReauthentication < ActiveSupport::TestCase
+class Devise::Passkeys::Controllers::Concerns::TestReauthentication < ActiveSupport::TestCase
   class TestClass
-    include Devise::Passkeys::Controllers::Concerns::PasskeyReauthentication
+    include Devise::Passkeys::Controllers::Concerns::Reauthentication
 
     attr_accessor :session
 
@@ -74,9 +74,9 @@ class Devise::Passkeys::Controllers::Concerns::TestPasskeyReauthentication < Act
   end
 end
 
-class Devise::Passkeys::Controllers::Concerns::TestPasskeyReauthenticationCustomization < ActiveSupport::TestCase
+class Devise::Passkeys::Controllers::Concerns::TestReauthenticationCustomization < ActiveSupport::TestCase
   class TestClass
-    include Devise::Passkeys::Controllers::Concerns::PasskeyReauthentication
+    include Devise::Passkeys::Controllers::Concerns::Reauthentication
 
     attr_accessor :session
 

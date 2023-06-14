@@ -4,7 +4,7 @@ module Devise
   module Passkeys
     module Controllers
       module Concerns
-        module PasskeyReauthentication
+        module Reauthentication
           extend ActiveSupport::Concern
 
           def store_reauthentication_token_in_session

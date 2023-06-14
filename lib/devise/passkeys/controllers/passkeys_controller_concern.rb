@@ -7,7 +7,7 @@ module Devise
         extend ActiveSupport::Concern
 
         included do
-          include Devise::Passkeys::Controllers::Concerns::PasskeyReauthentication
+          include Devise::Passkeys::Controllers::Concerns::Reauthentication
           include Devise::Passkeys::Controllers::Concerns::ReauthenticationChallenge
           include Warden::WebAuthn::AuthenticationInitiationHelpers
           include Warden::WebAuthn::RegistrationHelpers

@@ -7,7 +7,7 @@ module Devise
         extend ActiveSupport::Concern
 
         included do
-          include Devise::Passkeys::Controllers::Concerns::PasskeyReauthentication
+          include Devise::Passkeys::Controllers::Concerns::Reauthentication
           include Warden::WebAuthn::RegistrationHelpers
 
           before_action :require_no_authentication, only: [:new_challenge]
