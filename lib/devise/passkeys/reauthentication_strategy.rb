@@ -13,4 +13,4 @@ module Devise
   end
 end
 
-Warden::Strategies.add(:Reauthentication, Devise::Strategies::Reauthentication)
+Warden::Strategies.add(:passkey_reauthentication, Devise::Strategies::Reauthentication)

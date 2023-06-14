@@ -69,8 +69,8 @@ class Devise::Passkeys::Controllers::Concerns::TestReauthentication < ActiveSupp
     assert_nil @test_class.session["test_value:1234_current_reauthentication_token"]
   end
 
-  test "#Reauthentication_token_key" do
-    assert_equal "test_value:1234_current_reauthentication_token", @test_class.Reauthentication_token_key
+  test "#passkey_reauthentication_token_key" do
+    assert_equal "test_value:1234_current_reauthentication_token", @test_class.passkey_reauthentication_token_key
   end
 end
 
@@ -84,7 +84,7 @@ class Devise::Passkeys::Controllers::Concerns::TestReauthenticationCustomization
       self.session = {}
     end
 
-    def Reauthentication_token_key
+    def passkey_reauthentication_token_key
       "passkey_reauth"
     end
   end
@@ -141,7 +141,7 @@ class Devise::Passkeys::Controllers::Concerns::TestReauthenticationCustomization
     assert_nil @test_class.session["passkey_reauth"]
   end
 
-  test "#Reauthentication_token_key" do
-    assert_equal "passkey_reauth", @test_class.Reauthentication_token_key
+  test "#passkey_reauthentication_token_key" do
+    assert_equal "passkey_reauth", @test_class.passkey_reauthentication_token_key
   end
 end

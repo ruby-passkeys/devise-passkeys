@@ -39,7 +39,7 @@ module Devise
         def reauthenticate
           sign_out(resource)
           self.resource = warden.authenticate!(strategy, auth_options)
-          sign_in(resource, event: :Reauthentication)
+          sign_in(resource, event: :passkey_reauthentication)
           yield resource if block_given?
 
           store_reauthentication_token_in_session
@@ -58,7 +58,7 @@ module Devise
         end
 
         def strategy
-          :Reauthentication
+          :passkey_reauthentication
         end
 
         def auth_options
@@ -66,7 +66,7 @@ module Devise
         end
 
         def delete_reauthentication_challenge
-          session.delete(Reauthentication_challenge_session_key)
+          session.delete(passkey_reauthentication_challenge_session_key)
         end
 
         def set_relying_party_in_request_env
