@@ -8,10 +8,18 @@ After checking out the repo, run the following to install both Bundler and Appra
 bin/setup
 ```
 
+# Run tests
+
 To run the test suite for all Appraisal variants, run:
 
 ```sh
 bundle exec appraisal rake test
+```
+
+or
+
+```sh
+bin/test
 ```
 
 ## Writing Documentation
