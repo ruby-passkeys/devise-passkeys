@@ -32,7 +32,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   # Uncomment to register a new dependency of your gem
-  spec.add_dependency "devise"
+  spec.add_dependency "devise", ">= 4.7.1"
   spec.add_dependency "warden-webauthn", ">= 0.2.0"
 
   # For more information and examples about making a new gem, check out our
