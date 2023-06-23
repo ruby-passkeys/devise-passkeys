@@ -4,6 +4,8 @@ module Devise
   module Passkeys
     module Controllers
       module Concerns
+        # This concern is responsible for storing, retrieving, clearing,
+        # and consuming the reauthentication token in the session.
         module Reauthentication
           extend ActiveSupport::Concern
 
