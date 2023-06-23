@@ -93,6 +93,7 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     response_json = JSON.parse(response.body)
 
+    assert_equal User.after_passkey_authentication_passkey, passkey.label
     assert_equal ({ "reauthentication_token" => session["user_current_reauthentication_token"] }), response_json
     assert_nil session["user_current_reauthentication_challenge"]
   end
