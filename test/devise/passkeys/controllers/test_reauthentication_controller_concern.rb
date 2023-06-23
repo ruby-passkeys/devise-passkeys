@@ -316,10 +316,10 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcernSetup 
     Rails.application.reload_routes!
   end
 
-  test "#new_challenge: raises RuntimeError if set_relying_party_in_request_env has not been implemented" do
+  test "#new_challenge: raises NotImplemented if set_relying_party_in_request_env has not been implemented" do
     user = User.create!(email: "test@test.com")
     sign_in(user)
-    assert_raises RuntimeError do
+    assert_raises NotImplementedError do
       post "/reauthentication/new_challenge"
     end
   end

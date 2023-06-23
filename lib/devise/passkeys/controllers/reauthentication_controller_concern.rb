@@ -70,7 +70,7 @@ module Devise
         end
 
         def set_relying_party_in_request_env
-          raise "need to define relying_party for this SessionsController"
+          raise NotImplementedError, "need to define set_relying_party_in_request_env for #{self.class.name}"
         end
       end
     end
