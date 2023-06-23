@@ -35,7 +35,7 @@ class User < ApplicationRecord
     self.find_by(id: passkey.user.id)
   end
 
-  def after_passkey_authentication
+  def after_passkey_authentication(passkey:)
   end
 end
 ```

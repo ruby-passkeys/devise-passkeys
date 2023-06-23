@@ -13,6 +13,8 @@
   - https://github.com/ruby-passkeys/devise-passkeys/pull/11
 - Document `Devise::Passkeys::Model`
   - https://github.com/ruby-passkeys/devise-passkeys/pull/12
+- Add `passkey:` keyword param to `after_passkey_authentication` callback
+  - https://github.com/ruby-passkeys/devise-passkeys/pull/26
 
 ## [0.1.0] - 2023-05-07
 
