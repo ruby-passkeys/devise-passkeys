@@ -3,6 +3,18 @@
 module Devise
   module Passkeys
     module Controllers
+      # This concern is responsible for handling reauthentication.
+      # It should be included in the controller that handles reauthentication.
+      # It will define a handful of useful methods and include a bunch of concerns
+      # used for reauthentication.
+      #
+      # @example
+      #  class ReauthenticationController < ApplicationController
+      #    include Devise::Passkeys::Controllers::ReauthenticationControllerConcern
+      #
+      #    def relying_party = WebAuthn::RelyingParty.new
+      #    def set_relying_party_in_request_env = request.env[relying_party_key] = relying_party
+      #  end
       module ReauthenticationControllerConcern
         extend ActiveSupport::Concern
 
@@ -27,6 +39,8 @@ module Devise
           end
         end
 
+        # Stores the reauthentication challenge in session
+        # and renders the options for authentication.
         def new_challenge
           options_for_authentication = generate_authentication_options(relying_party: relying_party,
                                                                        options: { allow: resource.passkeys.pluck(:external_id) })
@@ -36,6 +50,9 @@ module Devise
           render json: options_for_authentication
         end
 
+        # Reauthenticates the user, **removes** the reauthentication **challenge** from session,
+        # **stores** the reauthentication **token** in session, and renders it.
+        # Optionally takes block that will be executed after the user has been reauthenticated.
         def reauthenticate
           sign_out(resource)
           self.resource = warden.authenticate!(strategy, auth_options)
