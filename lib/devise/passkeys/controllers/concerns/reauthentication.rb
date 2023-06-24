@@ -17,6 +17,8 @@ module Devise
         #
         # You can customize which reauthentication token you're using by changing
         # the `passkey_reauthentication_token_key` method after including this concern
+        #
+        # @see Devise::Passkeys::Controllers::ReauthenticationControllerConcern
         module Reauthentication
           extend ActiveSupport::Concern
 
@@ -25,7 +27,7 @@ module Devise
           #
           # The reauthentication token is securely generated using `Devise.friendly_token`
           #
-          # @return [String] the reauthentication token
+          # @return [String] The reauthentication token
           # @see passkey_reauthentication_token_key
           def store_reauthentication_token_in_session
             session[passkey_reauthentication_token_key] = Devise.friendly_token(50)
@@ -34,7 +36,7 @@ module Devise
           # This method is responsible for retrieving the reauthentication token
           # from the session.
           #
-          # @return [String] the reauthentication token
+          # @return [String] The reauthentication token
           # @see passkey_reauthentication_token_key
           # @see store_reauthentication_token_in_session
           def stored_reauthentication_token
@@ -44,7 +46,7 @@ module Devise
           # This method is responsible for clearing the reauthentication token from
           # the session.
           #
-          # @return [String] the reauthentication token
+          # @return [String] The reauthentication token
           # @see passkey_reauthentication_token_key
           def clear_reauthentication_token!
             session.delete(passkey_reauthentication_token_key)
@@ -53,7 +55,7 @@ module Devise
           # This method is responsible for consuming (i.e. retrieving & clearing)
           # the reauthentication token from the session.
           #
-          # @return [String] the reauthentication token
+          # @return [String] The reauthentication token
           # @see stored_reauthentication_token
           # @see clear_reauthentication_token!
           def consume_reauthentication_token!
@@ -80,7 +82,7 @@ module Devise
           # This method is responsible for generating the key that will be used
           # to store the reauthentication token in the session hash.
           #
-          # @return [String] the key that will be used to access the reauthentication token in the session
+          # @return [String] The key that will be used to access the reauthentication token in the session
           def passkey_reauthentication_token_key
             "#{resource_name}_current_reauthentication_token"
           end
