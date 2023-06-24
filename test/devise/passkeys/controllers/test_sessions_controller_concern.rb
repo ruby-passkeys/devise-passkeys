@@ -104,8 +104,8 @@ class Devise::Passkeys::Controllers::TestSessionsControllerConcernSetup < Action
     Rails.application.reload_routes!
   end
 
-  test "#new_challenge: raises RuntimeError if set_relying_party_in_request_env has not been implemented" do
-    assert_raises RuntimeError do
+  test "#new_challenge: raises RuntimeError if relying_party has not been implemented" do
+    assert_raises NoMethodError do
       post "/session/new_challenge"
     end
   end
