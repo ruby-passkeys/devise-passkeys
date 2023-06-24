@@ -11,7 +11,6 @@ module Devise
           include Devise::Passkeys::Controllers::Concerns::ReauthenticationChallenge
           include Warden::WebAuthn::AuthenticationInitiationHelpers
           include Warden::WebAuthn::RegistrationHelpers
-          include Warden::WebAuthn::StrategyHelpers
 
           prepend_before_action :authenticate_scope!
           before_action :ensure_at_least_one_passkey, only: %i[new_destroy_challenge destroy]
@@ -94,11 +93,14 @@ module Devise
         end
 
         def verify_passkey_challenge
-          if parsed_credential.nil?
-            render json: { message: find_message(:credential_missing_or_could_not_be_parsed) }, status: :bad_request
-            delete_registration_challenge
-            return false
+          begin
+            if parsed_credential.nil?
+              return render_credential_missing_or_could_not_be_parsed_error
+            end
+          rescue JSON::JSONError, TypeError
+            return render_credential_missing_or_could_not_be_parsed_error
           end
+
           begin
             @webauthn_credential = verify_registration(relying_party: relying_party)
           rescue ::WebAuthn::Error => e
@@ -133,6 +135,12 @@ module Devise
 
         def reauthentication_params
           params.require(:passkey).permit(:reauthentication_token)
+        end
+
+        def render_credential_missing_or_could_not_be_parsed_error
+          render json: { message: find_message(:credential_missing_or_could_not_be_parsed) }, status: :bad_request
+          delete_registration_challenge
+          return false
         end
       end
     end
