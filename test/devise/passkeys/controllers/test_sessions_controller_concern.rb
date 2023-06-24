@@ -13,10 +13,6 @@ class Devise::Passkeys::Controllers::TestSessionsControllerConcern < ActionDispa
       WebAuthn::RelyingParty.new(origin: "test.host")
     end
 
-    def set_relying_party_in_request_env
-      request.env[relying_party_key] = relying_party
-    end
-
     def resource_name
       :user
     end
@@ -53,10 +49,6 @@ class Devise::Passkeys::Controllers::TestSessionsControllerConcernCustomization 
 
     def relying_party
       WebAuthn::RelyingParty.new(origin: "test.host")
-    end
-
-    def set_relying_party_in_request_env
-      request.env[relying_party_key] = relying_party
     end
 
     def resource_name

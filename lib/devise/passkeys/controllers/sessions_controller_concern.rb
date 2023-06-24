@@ -29,7 +29,7 @@ module Devise
 
         protected
 
-        def set_relying_party_in_request_env
+        def relying_party
           raise "need to define relying_party for this SessionsController"
         end
       end

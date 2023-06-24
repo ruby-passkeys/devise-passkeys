@@ -96,10 +96,6 @@ class Users::SessionsController < Devise::SessionsController
   def relying_party
      WebAuthn::RelyingParty.new(...)
   end
-
-  def set_relying_party_in_request_env
-    request.env[relying_party_key] = relying_party
-  end
 end
 
 # frozen_string_literal: true
@@ -111,10 +107,6 @@ class Users::ReauthenticationController < DeviseController
   def relying_party
      WebAuthn::RelyingParty.new(...)
   end
-
-  def set_relying_party_in_request_env
-    request.env[relying_party_key] = relying_party
-  end
 end
 
 # frozen_string_literal: true
@@ -125,10 +117,6 @@ class Users::PasskeysController < DeviseController
 
   def relying_party
      WebAuthn::RelyingParty.new(...)
-  end
-
-  def set_relying_party_in_request_env
-    request.env[relying_party_key] = relying_party
   end
 end
 
