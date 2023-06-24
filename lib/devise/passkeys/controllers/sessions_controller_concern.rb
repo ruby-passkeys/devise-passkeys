@@ -8,7 +8,7 @@ module Devise
 
         included do
           include Warden::WebAuthn::AuthenticationInitiationHelpers
-          include Warden::WebAuthn::StrategyHelpers
+          include Warden::WebAuthn::RackHelpers
 
           # Prepending is crucial to ensure that the relying party is set in the
           # request.env before the strategy is executed
@@ -29,7 +29,7 @@ module Devise
 
         protected
 
-        def set_relying_party_in_request_env
+        def relying_party
           raise "need to define relying_party for this SessionsController"
         end
       end

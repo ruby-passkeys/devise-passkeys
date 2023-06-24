@@ -11,12 +11,12 @@ module Devise
           include Devise::Passkeys::Controllers::Concerns::ReauthenticationChallenge
           include Warden::WebAuthn::AuthenticationInitiationHelpers
           include Warden::WebAuthn::RegistrationHelpers
-          include Warden::WebAuthn::StrategyHelpers
 
           prepend_before_action :authenticate_scope!
           before_action :ensure_at_least_one_passkey, only: %i[new_destroy_challenge destroy]
           before_action :find_passkey, only: %i[new_destroy_challenge destroy]
 
+          before_action :verify_credential_integrity, only: [:create]
           before_action :verify_passkey_challenge, only: [:create]
           before_action :verify_reauthentication_token, only: %i[create destroy]
 
@@ -93,18 +93,17 @@ module Devise
           { id: resource.webauthn_id, name: resource.email }
         end
 
+        def verify_credential_integrity
+          return render_credential_missing_or_could_not_be_parsed_error if parsed_credential.nil?
+        rescue JSON::JSONError, TypeError
+          return render_credential_missing_or_could_not_be_parsed_error
+        end
+
         def verify_passkey_challenge
-          if parsed_credential.nil?
-            render json: { message: find_message(:credential_missing_or_could_not_be_parsed) }, status: :bad_request
-            delete_registration_challenge
-            return false
-          end
-          begin
-            @webauthn_credential = verify_registration(relying_party: relying_party)
-          rescue ::WebAuthn::Error => e
-            error_key = Warden::WebAuthn::ErrorKeyFinder.webauthn_error_key(exception: e)
-            render json: { message: find_message(error_key) }, status: :bad_request
-          end
+          @webauthn_credential = verify_registration(relying_party: relying_party)
+        rescue ::WebAuthn::Error => e
+          error_key = Warden::WebAuthn::ErrorKeyFinder.webauthn_error_key(exception: e)
+          render json: { message: find_message(error_key) }, status: :bad_request
         end
 
         def passkey_params
@@ -133,6 +132,12 @@ module Devise
 
         def reauthentication_params
           params.require(:passkey).permit(:reauthentication_token)
+        end
+
+        def render_credential_missing_or_could_not_be_parsed_error
+          render json: { message: find_message(:credential_missing_or_could_not_be_parsed) }, status: :bad_request
+          delete_registration_challenge
+          return false
         end
       end
     end

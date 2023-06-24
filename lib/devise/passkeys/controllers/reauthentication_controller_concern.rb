@@ -10,7 +10,7 @@ module Devise
           include Devise::Passkeys::Controllers::Concerns::Reauthentication
           include Devise::Passkeys::Controllers::Concerns::ReauthenticationChallenge
           include Warden::WebAuthn::AuthenticationInitiationHelpers
-          include Warden::WebAuthn::StrategyHelpers
+          include Warden::WebAuthn::RackHelpers
 
           prepend_before_action :authenticate_scope!
 
@@ -69,7 +69,7 @@ module Devise
           session.delete(passkey_reauthentication_challenge_session_key)
         end
 
-        def set_relying_party_in_request_env
+        def relying_party
           raise "need to define relying_party for this SessionsController"
         end
       end
