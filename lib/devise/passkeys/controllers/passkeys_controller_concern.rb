@@ -16,6 +16,7 @@ module Devise
           before_action :ensure_at_least_one_passkey, only: %i[new_destroy_challenge destroy]
           before_action :find_passkey, only: %i[new_destroy_challenge destroy]
 
+          before_action :verify_credential_integrity, only: [:create]
           before_action :verify_passkey_challenge, only: [:create]
           before_action :verify_reauthentication_token, only: %i[create destroy]
 
@@ -92,21 +93,17 @@ module Devise
           { id: resource.webauthn_id, name: resource.email }
         end
 
-        def verify_passkey_challenge
-          begin
-            if parsed_credential.nil?
-              return render_credential_missing_or_could_not_be_parsed_error
-            end
-          rescue JSON::JSONError, TypeError
-            return render_credential_missing_or_could_not_be_parsed_error
-          end
+        def verify_credential_integrity
+          return render_credential_missing_or_could_not_be_parsed_error if parsed_credential.nil?
+        rescue JSON::JSONError, TypeError
+          return render_credential_missing_or_could_not_be_parsed_error
+        end
 
-          begin
-            @webauthn_credential = verify_registration(relying_party: relying_party)
-          rescue ::WebAuthn::Error => e
-            error_key = Warden::WebAuthn::ErrorKeyFinder.webauthn_error_key(exception: e)
-            render json: { message: find_message(error_key) }, status: :bad_request
-          end
+        def verify_passkey_challenge
+          @webauthn_credential = verify_registration(relying_party: relying_party)
+        rescue ::WebAuthn::Error => e
+          error_key = Warden::WebAuthn::ErrorKeyFinder.webauthn_error_key(exception: e)
+          render json: { message: find_message(error_key) }, status: :bad_request
         end
 
         def passkey_params
