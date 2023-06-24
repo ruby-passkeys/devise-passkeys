@@ -30,7 +30,7 @@ module Devise
         protected
 
         def relying_party
-          raise "need to define relying_party for this SessionsController"
+          raise NoMethodError, "need to define relying_party for this #{self.class.name}"
         end
       end
     end
