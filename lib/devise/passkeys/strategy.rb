@@ -32,7 +32,7 @@ module Devise
 
         if validate(resource)
           remember_me(resource)
-          resource.after_passkey_authentication
+          resource.after_passkey_authentication(passkey: passkey)
           record_passkey_use(passkey: passkey)
           success!(resource)
           return

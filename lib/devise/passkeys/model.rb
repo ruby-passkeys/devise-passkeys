@@ -8,8 +8,10 @@ module Devise
     module PasskeyAuthenticatable
       # This is a callback that is called right after a successful passkey authentication.
       #
-      # By default, it is a no-op, but you can override it in your model for any custom behavior (such as notifying users of a new login).
-      def after_passkey_authentication; end
+      # By default, it is a no-op, but you can override it in your model for any custom behavior
+      # (such as notifying the user of a new login).
+      # @param passkey [String] the passkey that was used for authentication
+      def after_passkey_authentication(passkey:); end
     end
   end
 end
