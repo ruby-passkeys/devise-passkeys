@@ -8,7 +8,7 @@ module Devise
 
         included do
           include Warden::WebAuthn::AuthenticationInitiationHelpers
-          include Warden::WebAuthn::StrategyHelpers
+          include Warden::WebAuthn::RackHelpers
 
           # Prepending is crucial to ensure that the relying party is set in the
           # request.env before the strategy is executed

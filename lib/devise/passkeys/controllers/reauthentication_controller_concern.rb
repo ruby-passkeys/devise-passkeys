@@ -10,7 +10,7 @@ module Devise
           include Devise::Passkeys::Controllers::Concerns::Reauthentication
           include Devise::Passkeys::Controllers::Concerns::ReauthenticationChallenge
           include Warden::WebAuthn::AuthenticationInitiationHelpers
-          include Warden::WebAuthn::StrategyHelpers
+          include Warden::WebAuthn::RackHelpers
 
           prepend_before_action :authenticate_scope!
 
