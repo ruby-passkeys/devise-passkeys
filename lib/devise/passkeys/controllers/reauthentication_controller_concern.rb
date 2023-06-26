@@ -83,7 +83,7 @@ module Devise
         # 5. Ensures that the reauthentication challenge from the session, regardless of any errors
         #
         # @example
-        #  {"reauthentication_token": "abcd1234"}
+        #  {"reauthentication_token": "abcd1234", "new_csrf_token": "4321dcba"}
         #
         # `prepare_params` is called as a `before_action` to prepare the passkey credential for use by the
         # Warden strategy.
@@ -100,7 +100,10 @@ module Devise
 
           store_reauthentication_token_in_session
 
-          render json: { reauthentication_token: stored_reauthentication_token }
+          render json: { 
+            reauthentication_token: stored_reauthentication_token,
+            new_csrf_token: form_authenticity_token
+          }
         ensure
           delete_reauthentication_challenge
         end
