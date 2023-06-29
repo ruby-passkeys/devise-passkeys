@@ -3,6 +3,24 @@
 module Devise
   module Passkeys
     module Controllers
+      # This concern is responsible for handling registration.
+      # Should be included in any controller that handles user registrations. 
+      #
+      # Module provides necessary before filters, methods, and controller actions related to user (resource) registration and authentication, and defines: 
+      #
+      # - Generates registration options for WebAuthn and stores the challenge in object session. 
+      # - Protected methods for User (resource) Registration, Passkey Creation, User Registration Deletion from session.
+      # - Controller actions that facilitate Registration Options, Provide Passkeys.
+      # - Extends useful RegistrationHelper methods from Warden::WebAuthn 
+      #
+      # @example
+      #   class RegistrationsController < ApplicationController
+      #     include registrationsControllerConcern
+      #     
+      #
+      # @see Devise::Passkeys::Controllers::Concerns::Reauthentication
+      # @see Warden::WebAuthn::RegistrationHelpers
+      
       module RegistrationsControllerConcern
         extend ActiveSupport::Concern
 
@@ -30,6 +48,17 @@ module Devise
           end
         end
 
+        # Initializes a new session for user (resource) creation. Stores this challenge in new object session. 
+        # Renders response to request out to browser in JSON format.
+        # 
+        # The following before actions are called:
+        #
+        # - before_action :require_no_authentication, only: [:new_challenge]
+        # - before_action :require_email_and_passkey_label, only: %i[new_challenge create]
+        #
+        # @see DeviseController#require_no_authentication
+        # @see require_email_and_passkey_label
+        
         def new_challenge
           options_for_registration = generate_registration_options(
             relying_party: relying_party,
@@ -42,6 +71,16 @@ module Devise
           render json: options_for_registration
         end
 
+        # Creates the User (resource), using the given passkey & email.
+        # Calls the parent class's `#create` method, then calls `#create_resource_and_passkey` to finish creating the passkey
+        # If the User (resource) was actually persisted
+        #
+        # The following before actions are called: 
+        #
+        # - before_action :require_email_and_passkey_label, only: %i[new_challenge create]
+        # - before_action :verify_passkey_registration_challenge, only: [:create]
+        # - before_action :configure_sign_up_params, only: [:create]
+        
         def create
           super do |resource|
             create_resource_and_passkey(resource: resource)
@@ -49,7 +88,7 @@ module Devise
         end
 
         protected
-
+        
         def create_resource_and_passkey(resource:)
           return unless resource.persisted?
 
@@ -91,6 +130,8 @@ module Devise
         def passkey_params
           params.require(resource_name).permit(:passkey_label, :passkey_credential)
         end
+
+        # @!visibility public
 
         def require_email_and_passkey_label
           if sign_up_params[:email].blank?
