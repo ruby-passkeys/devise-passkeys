@@ -9,6 +9,15 @@ require_relative "controllers/passkeys_controller_concern"
 
 module Devise
   module Passkeys
+    # Passkeys Controllers encapsulate all methods that implement actions related to the Passkeys
+    #   The most common uses cases are: registration, authentication, and reauthentication
+    #   Other controllers and concerns should all inherit from here. As the following:
+    #     ReauthenticationChallenge concern: provide methods for reauthentication challenge
+    #     Reauthentication concern: provide methods for reauthentication
+    #     PasskeysControllerConcern: provide methods to manage passkeys
+    #     ReauthenticationControllerConcern: provide methods for handling reauthentication
+    #     RegistrationsControllerConcern: provide methods for handling registration
+    #     SessionsControllerConcern: provide methods for handing session
     module Controllers
     end
   end
