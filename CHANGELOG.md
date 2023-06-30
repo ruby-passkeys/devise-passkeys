@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Rename `create_resource_and_passkey` => `create_passkey_for_resource`
+  - https://github.com/ruby-passkeys/devise-passkeys/pull/37
 - `ReauthenticationControllerConcern` and `SessionsControllerConcern` raise `NoMethodError` if the `relying_party` has not been overridden
   - https://github.com/ruby-passkeys/devise-passkeys/pull/32
 - [Bump to warden-webauthn 0.2.1](https://github.com/ruby-passkeys/devise-passkeys/pull/29/commits/d825ffded91aa98801bdd5530442761aa60538f9)
