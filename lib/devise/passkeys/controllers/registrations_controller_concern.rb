@@ -83,7 +83,7 @@ module Devise
         
         def create
           super do |resource|
-            create_resource_and_passkey(resource: resource)
+            create_passkey_for_resource(resource: resource)
           end
         end
 
@@ -92,7 +92,7 @@ module Devise
         # Creates a passkey for given User (resource). 
         #
 
-        def create_resource_and_passkey(resource:)
+        def create_passkey_for_resource(resource:)
           return unless resource.persisted?
 
           passkey = create_passkey(resource: resource)
