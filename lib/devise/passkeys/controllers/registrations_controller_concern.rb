@@ -89,6 +89,9 @@ module Devise
 
         protected
         
+        # Creates a passkey for given User (resource). 
+        #
+
         def create_resource_and_passkey(resource:)
           return unless resource.persisted?
 
