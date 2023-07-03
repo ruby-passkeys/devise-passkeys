@@ -4,16 +4,17 @@ module Devise
   module Passkeys
     module Controllers
       # This concern should be included in any controller that handles
-      # user (`resource`) registration management (signup/delete account),
+      # user (`resource`) registration management (ie: signup/deleting an account),
       # and defines:
       #
       # - Useful methods and before filters to streamline user (`resource`) registration management using session variables
-      # - Controller actions for issuing a new WebAuthn challenge, and a `create`
-      #   action that creates a passkey if the user (`resource`) has been persisted
+      # - Controller actions for:
+      #     - Issuing a new WebAuthn challenge
+      #     - A `create` action that creates a passkey if the user (`resource`) has been persisted
       # - Helper modules from `Warden::WebAuthn` that are required to complete the registration process
       #
       # The `registration_user_id_key` and `registration_challenge_key` are defined
-      # using the `resource_name` to keep the generated IDs unique between resources
+      # using the `resource_name`, to keep the generated IDs unique between resources
       # during the registration process.
       #
       # A `raw_credential` method is provided to streamline access to
@@ -24,7 +25,7 @@ module Devise
       #
       # @example
       #   class RegistrationsController < ApplicationController
-      #     include registrationsControllerConcern
+      #     include Devise::Passkeys::Controllers::RegistrationsControllerConcern
       #
       #     def relying_party
       #       WebAuthn::RelyingParty.new
@@ -63,7 +64,7 @@ module Devise
 
         # This controller action issues a new challenge for the registration handshake.
         #
-        # The challenge is stored in the session variable, and renders the WebAuthn
+        # The challenge is stored in a session variable, and renders the WebAuthn
         # registration options as a JSON response.
         #
         # The following before filters are called:
@@ -92,7 +93,7 @@ module Devise
         #
         # 1. calls the parent class's `#create` method
         # 2. calls `#create_resource_and_passkey` to finish creating the passkey
-        #    If the user (`resource`) was actually persisted.
+        #    if the user (`resource`) was actually persisted
         # 3. Finishes the rest of the parent class's `#create` method
         #
         #
@@ -117,11 +118,11 @@ module Devise
         #
         # Creates a passkey for given user (`resource`).
         #
-        # The method tests that the user (`resource`) has been saved and is in the database,
-        # before generating a passkey assigned to said user.
+        # The method tests that the user (`resource`) is in the database
+        # before saving the passkey for the given user (`resource`).
         #
         #
-        # This method also ensures that the generated WebAuthn ID is deleted from the session to prevent
+        # This method also ensures that the generated WebAuthn User ID is deleted from the session to prevent
         # data leaks.
         #
         #
@@ -138,12 +139,12 @@ module Devise
 
         # @!visibility public
         #
-        # Generates a passkey for the given `resource`, using the `resouse.passkeys.create!`
+        # Generates a passkey for the given `resource`, using the `resource.passkeys.create!`
         # method with the following attributes:
         #
         # - `label`: The `passkey_params[:passkey_label]`
         # - `public_key`: The `@webauthn_credential.public_key`
-        # - `external_id`: The credential ID, stricly encoded as a Base64 string
+        # - `external_id`: The credential ID, strictly encoded as a Base 64 string
         # - `sign_count`: The `@webauthn_credential.sign_count`
         # - `last_used_at`: The current time, since this is the first time the passkey is being used
         #
@@ -177,17 +178,21 @@ module Devise
         end
 
         # @!visibility public
+        # The subset of parameters used when verifying a reauthentication_token
         def reauthentication_params
           params.require(:user).permit(:reauthentication_token)
         end
 
         # @!visibility public
+        # An override of `DeviseController`'s implementation, to circumvent the
+        # `update_with_password` method
+        # @see DeviseController#update_resource
         def update_resource(resource, params)
           resource.update(params)
         end
 
         # @!visibility public
-        # Override if you need to exclude certain webauthn credentials
+        # Override this method if you need to exclude certain WebAuthn credentials
         # from a registration request.
         # @see new_challenge
         # @see https://github.com/cedarcode/webauthn-ruby#initiation-phase
@@ -196,6 +201,7 @@ module Devise
         end
 
         # @!visibility public
+        # The subset of parameters used when verifying the passkey
         def passkey_params
           params.require(resource_name).permit(:passkey_label, :passkey_credential)
         end
@@ -241,13 +247,16 @@ module Devise
         end
 
         # @!visibility public
-        # If you have extra params to permit, append them to the sanitizer.
+        # Adds the generated WebAuthn User ID to `devise_parameter_sanitizer`'s permitted keys
         def configure_sign_up_params
           params[:user][:webauthn_id] = registration_user_id
           devise_parameter_sanitizer.permit(:sign_up, keys: [:webauthn_id])
         end
 
         # @!visibility public
+        # Prepares the user details for a WebAuthn registration request
+        # @see new_challenge
+        # @see https://github.com/cedarcode/webauthn-ruby#initiation-phase
         def user_details_for_registration
           store_registration_user_id
           { id: registration_user_id, name: sign_up_params[:email] }
