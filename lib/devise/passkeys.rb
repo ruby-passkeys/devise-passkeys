@@ -31,9 +31,9 @@ module Devise
   # @see https://github.com/ruby-passkeys/warden-webauthn
   module Passkeys
     # This is a helper method that creates and returns a passkey for
-    # the given User (`resource`), using the provided label & `WebAuthn::Credential`
+    # the given user (`resource`), using the provided label & `WebAuthn::Credential`
     # @see PasskeyIssuer#create_and_return_passkey
-    # @return A saved passkey for the the given User (`resource`)
+    # @return A saved passkey for the the given user (`resource`)
     def self.create_and_return_passkey(resource:, label:, webauthn_credential:, extra_attributes: {})
       PasskeyIssuer.build.create_and_return_passkey(
         resource: resource,
