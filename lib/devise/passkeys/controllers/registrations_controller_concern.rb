@@ -120,7 +120,6 @@ module Devise
         # The method tests that the user (`resource`) has been saved and is in the database,
         # before generating a passkey assigned to said user.
         #
-        # Will yield an array with user (`resource`) and Passkey after code block is passed through method.
         #
         # This method also ensures that the generated WebAuthn ID is deleted from the session to prevent
         # data leaks.
