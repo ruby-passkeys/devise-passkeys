@@ -92,7 +92,7 @@ module Devise
         # email & passkey. It:
         #
         # 1. calls the parent class's `#create` method
-        # 2. calls `#create_resource_and_passkey` to finish creating the passkey
+        # 2. calls `#create_passkey_for_resource` to finish creating the passkey
         #    if the user (`resource`) was actually persisted
         # 3. Finishes the rest of the parent class's `#create` method
         #
@@ -106,6 +106,7 @@ module Devise
         # @see require_email_and_passkey_label
         # @see verify_passkey_registration_challenge
         # @see configure_sign_up_params
+        # @see create_passkey_for_resource
         def create
           super do |resource|
             create_passkey_for_resource(resource: resource)
