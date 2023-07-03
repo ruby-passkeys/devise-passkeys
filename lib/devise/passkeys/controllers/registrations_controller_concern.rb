@@ -180,7 +180,7 @@ module Devise
         # @!visibility public
         # The subset of parameters used when verifying a reauthentication_token
         def reauthentication_params
-          params.require(:user).permit(:reauthentication_token)
+          params.require(resource_name).permit(:reauthentication_token)
         end
 
         # @!visibility public
@@ -249,7 +249,7 @@ module Devise
         # @!visibility public
         # Adds the generated WebAuthn User ID to `devise_parameter_sanitizer`'s permitted keys
         def configure_sign_up_params
-          params[:user][:webauthn_id] = registration_user_id
+          params[resource_name][:webauthn_id] = registration_user_id
           devise_parameter_sanitizer.permit(:sign_up, keys: [:webauthn_id])
         end
 
