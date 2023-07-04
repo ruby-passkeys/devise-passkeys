@@ -35,8 +35,6 @@ module Devise
 
       private
 
-      attr_accessor :maximum_passkeys_per_user
-
       def passkey_class(resource)
         if resource.respond_to?(:association) # ActiveRecord
           resource.association(:passkeys).klass
