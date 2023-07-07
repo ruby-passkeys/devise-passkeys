@@ -153,6 +153,21 @@ devise_scope :user do
 end
 ```
 
+## Reimplement the `:passkey_authenticatable` Module
+
+**Important**: You will need to reimplement the `:passkey_authenticatable` Devise module. This will override the module definition with your implementation specific definitions; pointing to the specific route, controller, etc.
+
+Here's an example from [devise-passkeys-template](https://github.com/ruby-passkeys/devise-passkeys-template/blob/main/app/models/user.rb#L18): 
+
+```ruby
+Devise.add_module :passkey_authenticatable,
+                  model: 'devise/passkeys/model',
+                  route: {session: [nil, :new, :create, :destroy] },
+                  controller: 'controller/sessions',
+                  strategy: true,
+                  no_input: true
+```
+
 # FAQs
 
 ## What about the Webauthn javascript? Mailers? Error handling?
