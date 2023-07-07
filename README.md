@@ -19,7 +19,7 @@ $ bundle
 
 # Usage
 
-1. Add `:passkey_authenticatable` in your Devise-enabled model
+## Add `:passkey_authenticatable`
 
 ```ruby
 class User < ApplicationRecord
@@ -47,7 +47,7 @@ The Devise-enabled model must have a `webauthn_id` field in the model; which is:
 
 This will allow you to explictly establish the relationship between a user & its passkeys (to help both your app & the user's authenticator with credential management)
 
-2. Generate the model that will store passkeys. The model name is not important, but the Devise-enabled model should have:
+## Generate the Model That Will Store Passkeys. Should Have:
 - A `has_many :passkeys` association
 - A `passkey_class` class method that returns the passkey class
 - A `find_for_passkey(passkey)` class method that finds the user for a given passkey
@@ -66,7 +66,7 @@ The following fields are required:
 
 It's recommended to add unique indexes on `external_id` and `public_key`
 
-3. Generate custom devise controllers & views for your Devise-enabled model
+## Generate Custom Devise Controllers & Views 
 
 [Since Devise does not have built-in passkeys support yet](https://github.com/heartcombo/devise/issues/5527), you'll need to customize both the controllers & the views
 
@@ -77,7 +77,7 @@ rails generate devise:views users
 
 If you're trying to keep your codebase small, these instructions only concern the `Users::SessionsController` & `Users::RegistrationsController`, so you can delete any other generated custom controllers if needed. You will likely need to modify the `views/users/shared/*` partials though, because they assume passwords are being used.
 
-4. Include the passkeys concerns into your controllers
+## Include the Passkeys Concerns in Your Controllers
 
 Rather than having base classes, `Devise::Passkeys` has a series of concerns that can be mixed into your controllers. This allows you to change behavior, and does not keep you stuck down a path that could be incompatible with your existing authentication setup.
 
@@ -122,7 +122,7 @@ end
 
 ```
 
-6. Add necessary routes
+## Add Routes
 
 Given the customization routes usually require, you'll need to hook up the routes yourself. Here's an example:
 
@@ -153,6 +153,7 @@ devise_scope :user do
 end
 ```
 
+# FAQs
 
 ## What about the Webauthn javascript? Mailers? Error handling?
 
