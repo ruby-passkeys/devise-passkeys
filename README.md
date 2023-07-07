@@ -153,13 +153,12 @@ devise_scope :user do
 end
 ```
 
-# Reimplement Passkeys Authenticatable Module 
+## Reimplement the `:passkey_authenticatable` Module
 
-You will need to reimplement Passkeys Authenticatable
+**Important**: You will need to reimplement the `:passkey_authenticatable` Devise module. This will override the module definition with your implementation specific definitions; pointing to the specific route, controller, etc.
 
-**Important This will override the module definition with the implementation specific definitions, this points to the specific route, controller, etc. **
+Here's an example from [devise-passkeys-template](https://github.com/ruby-passkeys/devise-passkeys-template/blob/main/app/models/user.rb#L18): 
 
-Here's an example: 
 ```ruby
 Devise.add_module :passkey_authenticatable,
                   model: 'devise/passkeys/model',
