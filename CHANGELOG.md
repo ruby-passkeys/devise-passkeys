@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Fixed bug with `Devise::Strategies::PasskeyReauthentication` clearing the CSRF token after reauthentication
+  - https://github.com/ruby-passkeys/devise-passkeys/pull/45
 - Rename `create_resource_and_passkey` => `create_passkey_for_resource`
   - https://github.com/ruby-passkeys/devise-passkeys/pull/37
 - `ReauthenticationControllerConcern` and `SessionsControllerConcern` raise `NoMethodError` if the `relying_party` has not been overridden
