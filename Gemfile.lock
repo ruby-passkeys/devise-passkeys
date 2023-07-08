@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    devise-passkeys (0.1.0)
+    devise-passkeys (0.2.0)
       devise (>= 4.7.1)
       warden-webauthn (>= 0.2.1)
 
