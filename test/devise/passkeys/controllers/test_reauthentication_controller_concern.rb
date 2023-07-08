@@ -14,6 +14,13 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     attr_accessor :resource
 
+    def form
+      render inline: <<~HTML
+        <%= form_with(url: "/form", method: :post) do |f|%>
+        <% end %>
+      HTML
+    end
+
     def relying_party
       WebAuthn::RelyingParty.new(origin: "https://www.example.com")
     end
@@ -28,7 +35,9 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
   end
 
   setup do
+    ActionController::Base.allow_forgery_protection = true
     Rails.application.routes.draw do
+      get "/reauthentication/form" => "devise/passkeys/controllers/test_reauthentication_controller_concern/test_reauthentication#form"
       post "/reauthentication/new_challenge" => "devise/passkeys/controllers/test_reauthentication_controller_concern/test_reauthentication#new_challenge"
       post "/reauthentication/reauthenticate" => "devise/passkeys/controllers/test_reauthentication_controller_concern/test_reauthentication#reauthenticate"
     end
@@ -36,6 +45,7 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
   teardown do
     Rails.application.reload_routes!
+    ActionController::Base.allow_forgery_protection = false
   end
 
   test "#new_challenge: not signed in" do
@@ -67,7 +77,7 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
     assert_equal "required", response_json["userVerification"]
   end
 
-  test "#reauthenticate: success" do
+  test "#reauthenticate: success, does not overwrite the CSRF token" do
     relying_party = example_relying_party(options: { origin: "www.example.com" })
     client = fake_client(origin: "https://www.example.com")
     credential = create_credential(client: client, relying_party: relying_party)
@@ -82,6 +92,10 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     sign_in(user)
 
+    get "/reauthentication/form"
+    existing_csrf_token = session["_csrf_token"]
+    assert_not_nil existing_csrf_token
+
     post "/reauthentication/new_challenge"
 
     assert_equal JSON.parse(response.body)["challenge"], session["user_current_reauthentication_challenge"]
@@ -93,6 +107,7 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     response_json = JSON.parse(response.body)
 
+    assert_equal existing_csrf_token, session["_csrf_token"]
     assert_equal User.after_passkey_authentication_passkey, passkey.label
     assert_equal ({ "reauthentication_token" => session["user_current_reauthentication_token"] }), response_json
     assert_nil session["user_current_reauthentication_challenge"]
@@ -113,6 +128,10 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     sign_in(user)
 
+    get "/reauthentication/form"
+    existing_csrf_token = session["_csrf_token"]
+    assert_not_nil existing_csrf_token
+
     post "/reauthentication/new_challenge"
 
     assert_equal JSON.parse(response.body)["challenge"], session["user_current_reauthentication_challenge"]
@@ -124,6 +143,7 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     response_json = JSON.parse(response.body)
 
+    assert_equal existing_csrf_token, session["_csrf_token"]
     assert_translation_missing_error(translation_key: "en.devise.failure.user.webauthn_user_verified_verification_error")
     assert_nil session["user_current_reauthentication_challenge"]
     assert_response :unauthorized
@@ -144,6 +164,10 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     sign_in(user)
 
+    get "/reauthentication/form"
+    existing_csrf_token = session["_csrf_token"]
+    assert_not_nil existing_csrf_token
+
     post "/reauthentication/new_challenge"
 
     assert_equal JSON.parse(response.body)["challenge"], session["user_current_reauthentication_challenge"]
@@ -154,6 +178,7 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     response_json = JSON.parse(response.body)
 
+    assert_equal existing_csrf_token, session["_csrf_token"]
     assert_translation_missing_error(translation_key: "en.devise.failure.user.webauthn_challenge_verification_error")
     assert_nil session["user_current_reauthentication_challenge"]
     assert_response :unauthorized
@@ -174,6 +199,10 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     sign_in(user)
 
+    get "/reauthentication/form"
+    existing_csrf_token = session["_csrf_token"]
+    assert_not_nil existing_csrf_token
+
     post "/reauthentication/new_challenge"
 
     assert_equal JSON.parse(response.body)["challenge"], session["user_current_reauthentication_challenge"]
@@ -186,6 +215,7 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     response_json = JSON.parse(response.body)
 
+    assert_equal existing_csrf_token, session["_csrf_token"]
     assert_translation_missing_error(translation_key: "en.devise.failure.user.stored_credential_not_found")
     assert_nil session["user_current_reauthentication_challenge"]
     assert_response :unauthorized
@@ -206,6 +236,10 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     sign_in(user)
 
+    get "/reauthentication/form"
+    existing_csrf_token = session["_csrf_token"]
+    assert_not_nil existing_csrf_token
+
     post "/reauthentication/new_challenge"
 
     assert_equal JSON.parse(response.body)["challenge"], session["user_current_reauthentication_challenge"]
@@ -218,6 +252,7 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     response_json = JSON.parse(response.body)
 
+    assert_equal existing_csrf_token, session["_csrf_token"]
     assert_equal ({ "error" => "You need to sign in or sign up before continuing." }), response.parsed_body
     assert_nil session["user_current_reauthentication_challenge"]
     assert_response :unauthorized
@@ -238,6 +273,10 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     sign_in(user)
 
+    get "/reauthentication/form"
+    existing_csrf_token = session["_csrf_token"]
+    assert_not_nil existing_csrf_token
+
     post "/reauthentication/new_challenge"
 
     assert_equal JSON.parse(response.body)["challenge"], session["user_current_reauthentication_challenge"]
@@ -250,6 +289,7 @@ class Devise::Passkeys::Controllers::TestReauthenticationControllerConcern < Act
 
     response_json = JSON.parse(response.body)
 
+    assert_equal existing_csrf_token, session["_csrf_token"]
     assert_equal ({ "error" => "You need to sign in or sign up before continuing." }), response.parsed_body
     assert_nil session["user_current_reauthentication_challenge"]
     assert_response :unauthorized
