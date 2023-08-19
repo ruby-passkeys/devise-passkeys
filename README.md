@@ -164,8 +164,7 @@ Devise.add_module :passkey_authenticatable,
                   model: 'devise/passkeys/model',
                   route: {session: [nil, :new, :create, :destroy] },
                   controller: 'controller/sessions',
-                  strategy: true,
-                  no_input: true
+                  strategy: true
 ```
 
 # FAQs

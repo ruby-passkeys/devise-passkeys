@@ -1,3 +1,10 @@
+## [0.3.0] - 2023-08-18
+
+### Bugfixes
+
+- Remove default `Devise.add_module`, remove incorrect `no_input: true` declaration in documentation
+  - https://github.com/ruby-passkeys/devise-passkeys/pull/48
+
 ## [0.2.0] - 2023-07-07
 
 ### Bugfixes

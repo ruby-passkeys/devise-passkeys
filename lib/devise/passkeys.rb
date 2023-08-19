@@ -44,8 +44,3 @@ module Devise
     end
   end
 end
-
-Devise.add_module :passkey_authenticatable,
-                  model: "devise/passkeys/model",
-                  strategy: true,
-                  no_input: true
