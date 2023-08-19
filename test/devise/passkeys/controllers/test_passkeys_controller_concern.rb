@@ -82,7 +82,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
     assert_equal 120_000, response_json["timeout"]
     assert_equal ({}), response_json["extensions"]
     assert_equal excluded_credentials, response_json["excludeCredentials"]
-    assert_equal ({ "userVerification" => "required" }), response_json["authenticatorSelection"]
+    assert_equal ({ "residentKey" => "required", "userVerification" => "required" }), response_json["authenticatorSelection"]
   end
 
   test "#create: creates a passkey for the user" do
@@ -115,7 +115,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
     assert_equal 120_000, response_json["timeout"]
     assert_equal ({}), response_json["extensions"]
     assert_equal excluded_credentials, response_json["excludeCredentials"]
-    assert_equal ({ "userVerification" => "required" }), response_json["authenticatorSelection"]
+    assert_equal ({ "residentKey" => "required", "userVerification" => "required" }), response_json["authenticatorSelection"]
 
     raw_credential = client.create(challenge: response_json["challenge"], user_verified: true)
 
@@ -189,7 +189,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
     assert_equal 120_000, response_json["timeout"]
     assert_equal ({}), response_json["extensions"]
     assert_equal excluded_credentials, response_json["excludeCredentials"]
-    assert_equal ({ "userVerification" => "required" }), response_json["authenticatorSelection"]
+    assert_equal ({ "residentKey" => "required", "userVerification" => "required" }), response_json["authenticatorSelection"]
 
     raw_credential = client.create(challenge: response_json["challenge"], user_verified: false)
 
@@ -237,7 +237,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
     assert_equal 120_000, response_json["timeout"]
     assert_equal ({}), response_json["extensions"]
     assert_equal excluded_credentials, response_json["excludeCredentials"]
-    assert_equal ({ "userVerification" => "required" }), response_json["authenticatorSelection"]
+    assert_equal ({ "residentKey" => "required", "userVerification" => "required" }), response_json["authenticatorSelection"]
 
     raw_credential = client.create(challenge: "blah", user_verified: true)
 
@@ -360,7 +360,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
     assert_equal 120_000, response_json["timeout"]
     assert_equal ({}), response_json["extensions"]
     assert_equal excluded_credentials, response_json["excludeCredentials"]
-    assert_equal ({ "userVerification" => "required" }), response_json["authenticatorSelection"]
+    assert_equal ({ "residentKey" => "required", "userVerification" => "required" }), response_json["authenticatorSelection"]
 
     raw_credential = client.create(challenge: response_json["challenge"], user_verified: true)
 
@@ -405,7 +405,7 @@ class Devise::Passkeys::Controllers::TestPasskeysControllerConcern < ActionDispa
     assert_equal 120_000, response_json["timeout"]
     assert_equal ({}), response_json["extensions"]
     assert_equal excluded_credentials, response_json["excludeCredentials"]
-    assert_equal ({ "userVerification" => "required" }), response_json["authenticatorSelection"]
+    assert_equal ({ "residentKey" => "required", "userVerification" => "required" }), response_json["authenticatorSelection"]
 
     raw_credential = client.create(challenge: response_json["challenge"], user_verified: true)
 

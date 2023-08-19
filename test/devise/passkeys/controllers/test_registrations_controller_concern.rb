@@ -71,7 +71,7 @@ class Devise::Passkeys::Controllers::TestRegistrationsControllerConcern < Action
     assert_equal 120_000, response_json["timeout"]
     assert_equal ({}), response_json["extensions"]
     assert_empty response_json["excludeCredentials"]
-    assert_equal ({ "userVerification" => "required" }), response_json["authenticatorSelection"]
+    assert_equal ({ "residentKey" => "required", "userVerification" => "required" }), response_json["authenticatorSelection"]
   end
 
   test "#create: success" do
