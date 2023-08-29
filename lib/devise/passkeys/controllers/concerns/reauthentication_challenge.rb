@@ -31,6 +31,14 @@ module Devise
             "#{resource_name}_current_reauthentication_challenge"
           end
 
+          # This method is responsible for generating the the object class for Devise resource name
+          # that will be used to find the authentication_keys configured in Devise
+          #
+          # @return [Object] The Devise resource name, as an object
+          def resource_class
+            Object.const_get(resource_name.to_s.camelize)
+          end
+
           # This method is responsible for storing the reauthentication challenge in the session.
           #
           # @param [WebAuthn::PublicKeyCredential::RequestOptions] options_for_authentication the options for authentication,

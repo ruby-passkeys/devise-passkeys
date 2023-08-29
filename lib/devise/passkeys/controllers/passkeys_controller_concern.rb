@@ -90,7 +90,7 @@ module Devise
         end
 
         def user_details_for_registration
-          { id: resource.webauthn_id, name: resource.email }
+          { id: resource.webauthn_id, name: resource.send(resource_class.authentication_keys.first) }
         end
 
         def verify_credential_integrity

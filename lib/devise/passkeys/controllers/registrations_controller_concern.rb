@@ -208,15 +208,17 @@ module Devise
         end
 
         # @!visibility public
-        # Verifies that the `sign_up_params` has an `:email` and `:passkey_label`.
+        # Verifies that the `sign_up_params` has a value for the devise resource authentication
+        # key and `:passkey_label`.
         #
         # If either is missing or blank, a `400 Bad Request` JSON response is rendered.
         #
         # @example
         #  {"error": "Please enter your email address."}
+        #  {"error": "Please enter your username."}
         def require_email_and_passkey_label
-          if sign_up_params[:email].blank?
-            render json: { message: find_message(:email_missing) }, status: :bad_request
+          if sign_up_params[resource_authentication_key].blank?
+            render json: { message: find_message(resource_authentication_key_missing) }, status: :bad_request
             return false
           end
 
@@ -260,19 +262,37 @@ module Devise
         # @see https://github.com/cedarcode/webauthn-ruby#initiation-phase
         def user_details_for_registration
           store_registration_user_id
-          { id: registration_user_id, name: sign_up_params[:email] }
+          { id: registration_user_id, name: sign_up_params[resource_authentication_key] }
         end
 
+        # @!visibility public
+        # Return the value of registration_user_id_key, stored in the session
         def registration_user_id
           session[registration_user_id_key]
         end
 
+        # @!visibility public
+        # Delete registration_user_id_key from the session
         def delete_registration_user_id!
           session.delete(registration_user_id_key)
         end
 
+        # @!visibility public
+        # Store WebAuthn value for `generate_user_id` in the session
         def store_registration_user_id
           session[registration_user_id_key] = WebAuthn.generate_user_id
+        end
+
+        # @!visibility public
+        # Return the first authentication key, configured for the Devise resource
+        def resource_authentication_key
+          (resource || resource_class).authentication_keys.first
+        end
+
+        # @!visibility public
+        # Return the missing symbol for the first authentication key, configured in Devise
+        def resource_authentication_key_missing
+          "#{resource_authentication_key}_missing".to_sym
         end
       end
     end
