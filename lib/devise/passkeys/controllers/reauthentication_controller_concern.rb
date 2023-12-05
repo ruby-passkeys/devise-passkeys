@@ -116,7 +116,7 @@ module Devise
         end
 
         # @!visibility public
-        # A method that can be overridden to customize the Warden stratey used.
+        # A method that can be overridden to customize the Warden strategy used.
         # @return [Symbol] The key that identifies which `Warden` strategy will be used to handle the
         #                  authentication flow for the reauthentication. Defaults to `:passkey_reauthentication`
         def strategy

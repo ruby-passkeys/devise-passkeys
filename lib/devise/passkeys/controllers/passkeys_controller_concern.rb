@@ -94,9 +94,9 @@ module Devise
         end
 
         def verify_credential_integrity
-          return render_credential_missing_or_could_not_be_parsed_error if parsed_credential.nil?
+          render_credential_missing_or_could_not_be_parsed_error if parsed_credential.nil?
         rescue JSON::JSONError, TypeError
-          return render_credential_missing_or_could_not_be_parsed_error
+          render_credential_missing_or_could_not_be_parsed_error
         end
 
         def verify_passkey_challenge
@@ -137,7 +137,8 @@ module Devise
         def render_credential_missing_or_could_not_be_parsed_error
           render json: { message: find_message(:credential_missing_or_could_not_be_parsed) }, status: :bad_request
           delete_registration_challenge
-          return false
+
+          false
         end
       end
     end
